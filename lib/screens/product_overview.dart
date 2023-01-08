@@ -47,6 +47,7 @@ class _ProductOverviewState extends State<ProductOverview>
   @override
   void initState() {
     _tabController = new TabController(length: 2, vsync: this);
+
     super.initState();
   }
 
@@ -809,39 +810,6 @@ class _ProductOverviewState extends State<ProductOverview>
                                             TextFormField(
                                               validator: (value) {
                                                 return value!.isEmpty
-                                                    ? 'Put 10% of the product cost as patial payment'
-                                                    : null;
-                                              },
-                                              // controller: _itemLocationController,
-                                              controller:
-                                                  _itemPartialPayController,
-
-                                              style: ralewayStyle.copyWith(
-                                                fontWeight: FontWeight.w400,
-                                                color: AppColors.blueDarkColor,
-                                                fontSize: 16.0,
-                                              ),
-                                              decoration: InputDecoration(
-                                                // border: InputBorder.none,
-                                                border: OutlineInputBorder(),
-
-                                                contentPadding:
-                                                    const EdgeInsets.only(
-                                                        top: 5.0, left: 12.0),
-                                                hintText:
-                                                    'Put 10% of the product cost as patial payment',
-                                                hintStyle:
-                                                    ralewayStyle.copyWith(
-                                                  fontWeight: FontWeight.w400,
-                                                  color: AppColors.blueDarkColor
-                                                      .withOpacity(0.5),
-                                                  fontSize: 16.0,
-                                                ),
-                                              ),
-                                            ),
-                                            TextFormField(
-                                              validator: (value) {
-                                                return value!.isEmpty
                                                     ? 'Product Description Required'
                                                     : null;
                                               },
@@ -954,126 +922,105 @@ class _ProductOverviewState extends State<ProductOverview>
 
                       //======================================================//
 
-                      // Padding(
-                      //   padding: const EdgeInsets.only(top: 20, right: 200),
-                      //   child: Text(
-                      //     'Account Number',
-                      //     textAlign: TextAlign.start,
-                      //     style: ralewayStyle.copyWith(
-                      //       fontSize: 16.0,
-                      //       color: Color.fromARGB(255, 0, 0, 0),
-                      //       fontWeight: FontWeight.w500,
-                      //     ),
-                      //   ),
-                      // ),
-                      // Padding(
-                      //   padding: const EdgeInsets.only(top: 10.0),
-                      //   child: Container(
-                      //     height: 50.0,
-                      //     width: 345,
-                      //     decoration: BoxDecoration(
-                      //       borderRadius: BorderRadius.circular(16.0),
-                      //       color: AppColors.whiteColor,
-                      //     ),
-                      //     child: TextFormField(
-                      //       // keyboardType: TextInputType.multiline,
-                      //       // minLines: 2, // <-- SEE HERE
-                      //       // maxLines: 2,
-                      //       validator: (value) {
-                      //         return value!.isEmpty
-                      //             ? 'Account Number Required'
-                      //             : null;
-                      //       },
-                      //       controller: _itemAccountNoController,
+                      //=====================================================//
+                      Center(
+                        child: SizedBox(
+                            width: 345,
+                            child: DefaultTabController(
+                              length: 2,
+                              child: Column(
+                                children: <Widget>[
+                                  SizedBox(
+                                    height: 15,
+                                  ),
+                                  Container(
+                                    height: 48,
+                                    decoration: BoxDecoration(
+                                        color: Color(0xFF292639),
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(7.0),
+                                      child: const TabBar(
+                                        tabs: [
+                                          Tab(
+                                            text: 'Partial Payment ',
+                                          ),
+                                          Tab(
+                                            text: 'EFT ',
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 100,
+                                    child: TabBarView(
+                                      children: [
+                                        Container(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              TextFormField(
+                                                validator: (value) {
+                                                  return value!.isEmpty
+                                                      ? 'Put 10% of the product cost as patial payment'
+                                                      : null;
+                                                },
+                                                // controller: _itemLocationController,
+                                                controller:
+                                                    _itemPartialPayController,
 
-                      //       // onSaved: (value) {
-                      //       //   productData['Description'] = value!;
-                      //       // },
-                      //       // controller: _emailTextController,
-                      //       style: ralewayStyle.copyWith(
-                      //         fontWeight: FontWeight.w400,
-                      //         color: AppColors.blueDarkColor,
-                      //         fontSize: 16.0,
-                      //       ),
-                      //       decoration: InputDecoration(
-                      //         // border: InputBorder.none,
-                      //         border: OutlineInputBorder(),
+                                                style: ralewayStyle.copyWith(
+                                                  fontWeight: FontWeight.w400,
+                                                  color:
+                                                      AppColors.blueDarkColor,
+                                                  fontSize: 16.0,
+                                                ),
+                                                decoration: InputDecoration(
+                                                  // border: InputBorder.none,
+                                                  border: OutlineInputBorder(),
 
-                      //         // prefixIcon: IconButton(
-                      //         //     onPressed: () {},
-                      //         //     icon: Image.asset(AppIcons.emailIcon)),
-                      //         contentPadding:
-                      //             const EdgeInsets.only(top: 5, left: 12.0),
-                      //         hintText: 'Account Number',
-                      //         hintStyle: ralewayStyle.copyWith(
-                      //           fontWeight: FontWeight.w400,
-                      //           color: AppColors.blueDarkColor.withOpacity(0.5),
-                      //           fontSize: 16.0,
-                      //         ),
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
-                      // Padding(
-                      //   padding: const EdgeInsets.only(top: 20, right: 190),
-                      //   child: Text(
-                      //     'Institution Number',
-                      //     textAlign: TextAlign.start,
-                      //     style: ralewayStyle.copyWith(
-                      //       fontSize: 16.0,
-                      //       color: Color.fromARGB(255, 0, 0, 0),
-                      //       fontWeight: FontWeight.w500,
-                      //     ),
-                      //   ),
-                      // ),
-                      // Padding(
-                      //   padding: const EdgeInsets.only(top: 10.0),
-                      //   child: Container(
-                      //     height: 50.0,
-                      //     width: 345,
-                      //     decoration: BoxDecoration(
-                      //       borderRadius: BorderRadius.circular(16.0),
-                      //       color: AppColors.whiteColor,
-                      //     ),
-                      //     child: TextFormField(
-                      //       // keyboardType: TextInputType.multiline,
-                      //       // minLines: 2, // <-- SEE HERE
-                      //       // maxLines: 2,
-                      //       validator: (value) {
-                      //         return value!.isEmpty
-                      //             ? 'Institution Number Required'
-                      //             : null;
-                      //       },
-                      //       controller: _itemInstitutionNoController,
+                                                  contentPadding:
+                                                      const EdgeInsets.only(
+                                                          top: 5.0, left: 12.0),
+                                                  hintText:
+                                                      'Put 10% of the product cost as patial payment',
+                                                  hintStyle:
+                                                      ralewayStyle.copyWith(
+                                                    fontWeight: FontWeight.w400,
+                                                    color: AppColors
+                                                        .blueDarkColor
+                                                        .withOpacity(0.5),
+                                                    fontSize: 16.0,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
 
-                      //       // onSaved: (value) {
-                      //       //   productData['Description'] = value!;
-                      //       // },
-                      //       // controller: _emailTextController,
-                      //       style: ralewayStyle.copyWith(
-                      //         fontWeight: FontWeight.w400,
-                      //         color: AppColors.blueDarkColor,
-                      //         fontSize: 16.0,
-                      //       ),
-                      //       decoration: InputDecoration(
-                      //         // border: InputBorder.none,
-                      //         border: OutlineInputBorder(),
+                                        Container(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              Text(
+                                                  'Email Address : etransfer@backers.ca'),
+                                            ],
+                                          ),
+                                        ),
+                                        // Icon(Icons.directions_bike),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )),
+                      ),
 
-                      //         // prefixIcon: IconButton(
-                      //         //     onPressed: () {},
-                      //         //     icon: Image.asset(AppIcons.emailIcon)),
-                      //         contentPadding:
-                      //             const EdgeInsets.only(top: 5.0, left: 12.0),
-                      //         hintText: 'Institution Number',
-                      //         hintStyle: ralewayStyle.copyWith(
-                      //           fontWeight: FontWeight.w400,
-                      //           color: AppColors.blueDarkColor.withOpacity(0.5),
-                      //           fontSize: 16.0,
-                      //         ),
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
+                      //======================================================//
 
                       //=======================================================//
 
