@@ -784,9 +784,6 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 20,
-              ),
               Container(
                   width: 325,
                   child: Row(
@@ -808,11 +805,7 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
               const SizedBox(
                 height: 5,
               ),
-              ElevatedButton(
-                  onPressed: () {
-                    key.currentState!.clear();
-                  },
-                  child: Text('Clear')),
+              ElevatedButton(onPressed: () async {}, child: Text('Clear')),
 
               const SizedBox(
                 height: 20,
@@ -824,9 +817,6 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
                       fontWeight: FontWeight.w800,
                       color: AppColors.blueDarkColor,
                     )),
-              ),
-              const SizedBox(
-                height: 20,
               ),
               Padding(
                 padding: const EdgeInsets.only(right: 30.0),
@@ -1027,6 +1017,9 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
               ),
 
               //====================================//
+              const SizedBox(
+                height: 20,
+              ),
 
               const SizedBox(
                 height: 20,
@@ -1080,6 +1073,53 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
               //     },
               //   ),
               // ),
+              Container(
+                  height: 50.0,
+                  width: 345,
+                  child: TextButton(
+                    onPressed: () => showDialog<String>(
+                      context: context,
+                      builder: (BuildContext context) => AlertDialog(
+                        title: const Text('AlertDialog Title'),
+                        content: const Text('To confirm click confirm button'),
+                        actions: <Widget>[
+                          Container(
+                              width: 325,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Checkbox(
+                                      value: isChecked,
+                                      onChanged: (bool? newValue) {
+                                        setState(() {
+                                          isChecked = newValue!;
+                                        });
+                                      }),
+                                  Text(
+                                    'I have read the agreement and I accept it',
+                                    style: TextStyle(fontSize: 10),
+                                  )
+                                ],
+                              )),
+                          Container(
+                            height: 50.0,
+                            width: 345,
+                            child: ElevatedButton(
+                              child: const Text('Confirm'),
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.blueDarkColor),
+                              onPressed: () {
+                                saveItem();
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    child: const Text('Confirm'),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.blueDarkColor),
+                  )),
 
               const SizedBox(
                 height: 20,
@@ -1092,7 +1132,7 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
                       backgroundColor: AppColors.blueDarkColor),
                   // onPressed: isChecked ? saveItem() : null,
                   onPressed: () {
-                    saveItem();
+                    saveItem() ? null : null;
                   },
                 ),
               ),
