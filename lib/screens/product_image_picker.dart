@@ -29,14 +29,8 @@ class ProductImagePicker extends StatefulWidget {
 }
 
 class _ProductImagePickerState extends State<ProductImagePicker> {
-  bool _afternoonOutdoor = false;
-  String caption_afternoon_outdoor = 'Afternoon Outdoor';
+  bool isChecked = false;
 
-  _afternoonOutdoorChanged(bool value) =>
-      setState(() => _afternoonOutdoor = value);
-
-  bool valuefirst = false;
-  bool valuesecond = false;
   final Size size = Get.size;
   int myIndex = 0;
   List<Widget> widgetList = [HomeScreen(), Profile()];
@@ -227,17 +221,8 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
     });
   }
 
-  bool isChecked = false;
   @override
   Widget build(BuildContext context) {
-    bool showvalue;
-    bool value;
-    bool _checkbox = false;
-    bool _checkboxListTile = false;
-    bool isRememberMe;
-    bool? _value = false;
-
-    bool isChecked = false;
     return Scaffold(
       appBar: AppBar(
         leading: Padding(
@@ -800,8 +785,34 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
                 ),
               ),
               const SizedBox(
+                height: 20,
+              ),
+              Container(
+                  width: 325,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Checkbox(
+                          value: isChecked,
+                          onChanged: (bool? newValue) {
+                            setState(() {
+                              isChecked = newValue!;
+                            });
+                          }),
+                      Text(
+                        'I have read the agreement and I accept it',
+                        style: TextStyle(fontSize: 10),
+                      )
+                    ],
+                  )),
+              const SizedBox(
                 height: 5,
               ),
+              ElevatedButton(
+                  onPressed: () {
+                    key.currentState!.clear();
+                  },
+                  child: Text('Clear')),
 
               const SizedBox(
                 height: 20,
@@ -813,6 +824,9 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
                       fontWeight: FontWeight.w800,
                       color: AppColors.blueDarkColor,
                     )),
+              ),
+              const SizedBox(
+                height: 20,
               ),
               Padding(
                 padding: const EdgeInsets.only(right: 30.0),
@@ -1012,30 +1026,7 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
                 ),
               ),
 
-              const SizedBox(
-                height: 20,
-              ),
-              Container(),
-
               //====================================//
-              const SizedBox(
-                height: 20,
-              ),
-              Container(
-                width: 325,
-                // child: ElevatedButton(
-                //   child: const Text('Go to review page'),
-                //   style: ElevatedButton.styleFrom(
-                //       backgroundColor: AppColors.blueDarkColor),
-                //   onPressed: () {
-                //     Navigator.push(
-                //       context,
-                //       MaterialPageRoute(
-                //           builder: (context) => const ReviewPage()),
-                //     );
-                //   },
-                // ),
-              ),
 
               const SizedBox(
                 height: 20,
@@ -1099,6 +1090,7 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
                   child: const Text('Continue'),
                   style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.blueDarkColor),
+                  // onPressed: isChecked ? saveItem() : null,
                   onPressed: () {
                     saveItem();
                   },
