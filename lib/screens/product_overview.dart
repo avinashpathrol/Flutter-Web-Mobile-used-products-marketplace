@@ -962,41 +962,8 @@ class _ProductOverviewState extends State<ProductOverview>
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceEvenly,
                                             children: [
-                                              TextFormField(
-                                                validator: (value) {
-                                                  return value!.isEmpty
-                                                      ? 'Put 10% of the product cost as patial payment'
-                                                      : null;
-                                                },
-                                                // controller: _itemLocationController,
-                                                controller:
-                                                    _itemPartialPayController,
-
-                                                style: ralewayStyle.copyWith(
-                                                  fontWeight: FontWeight.w400,
-                                                  color:
-                                                      AppColors.blueDarkColor,
-                                                  fontSize: 16.0,
-                                                ),
-                                                decoration: InputDecoration(
-                                                  // border: InputBorder.none,
-                                                  border: OutlineInputBorder(),
-
-                                                  contentPadding:
-                                                      const EdgeInsets.only(
-                                                          top: 5.0, left: 12.0),
-                                                  hintText:
-                                                      'Put 10% of the product cost as patial payment',
-                                                  hintStyle:
-                                                      ralewayStyle.copyWith(
-                                                    fontWeight: FontWeight.w400,
-                                                    color: AppColors
-                                                        .blueDarkColor
-                                                        .withOpacity(0.5),
-                                                    fontSize: 16.0,
-                                                  ),
-                                                ),
-                                              ),
+                                              Text(
+                                                  'Email Address : etransfer@backers.ca'),
                                             ],
                                           ),
                                         ),
@@ -1027,25 +994,40 @@ class _ProductOverviewState extends State<ProductOverview>
                       SizedBox(
                         height: size.height / 80,
                       ),
+                      Container(
+                          height: 50.0,
+                          width: 345,
+                          child: TextButton(
+                            onPressed: () => showDialog<String>(
+                              context: context,
+                              builder: (BuildContext context) => AlertDialog(
+                                title: const Text('AlertDialog Title'),
+                                content: const Text(
+                                    'To confirm click confirm button'),
+                                actions: <Widget>[
+                                  Container(
+                                    height: 50.0,
+                                    width: 345,
+                                    child: ElevatedButton(
+                                      child: const Text('Confirm'),
+                                      style: ElevatedButton.styleFrom(
+                                          backgroundColor:
+                                              AppColors.blueDarkColor),
+                                      onPressed: () {
+                                        UpdateAgreement();
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            child: const Text('Confirm'),
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.blueDarkColor),
+                          )),
                       SizedBox(
                         height: size.height / 100,
                       ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Container(
-                        height: 50.0,
-                        width: 345,
-                        child: ElevatedButton(
-                          child: const Text('Confirm'),
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.blueDarkColor),
-                          onPressed: () {
-                            UpdateAgreement();
-                          },
-                        ),
-                      ),
-
                       const SizedBox(
                         height: 20,
                       ),
@@ -1053,17 +1035,19 @@ class _ProductOverviewState extends State<ProductOverview>
                       //   height: 50.0,
                       //   width: 345,
                       //   child: ElevatedButton(
-                      //     child: const Text('Export to PDF'),
+                      //     child: const Text('Confirm'),
                       //     style: ElevatedButton.styleFrom(
                       //         backgroundColor: AppColors.blueDarkColor),
                       //     onPressed: () {
-                      //       // Navigator.push(
-                      //       //   context,
-                      //       //   MaterialPageRoute(builder: (context) => saveData()),
-                      //       // );
+                      //       UpdateAgreement();
                       //     },
                       //   ),
                       // ),
+
+                      const SizedBox(
+                        height: 20,
+                      ),
+
                       const SizedBox(
                         height: 20,
                       ),
