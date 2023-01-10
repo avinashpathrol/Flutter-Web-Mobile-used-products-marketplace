@@ -30,6 +30,7 @@ class ProductImagePicker extends StatefulWidget {
 
 class _ProductImagePickerState extends State<ProductImagePicker> {
   bool isChecked = false;
+  bool _isSelected = false;
 
   final Size size = Get.size;
   int myIndex = 0;
@@ -1073,6 +1074,7 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
               //     },
               //   ),
               // ),
+
               Container(
                   height: 50.0,
                   width: 345,
@@ -1080,27 +1082,28 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
                     onPressed: () => showDialog<String>(
                       context: context,
                       builder: (BuildContext context) => AlertDialog(
-                        title: const Text('AlertDialog Title'),
+                        // title: const Text('AlertDialog Title'),
                         content: const Text('To confirm click confirm button'),
+
                         actions: <Widget>[
-                          Container(
-                              width: 325,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Checkbox(
-                                      value: isChecked,
-                                      onChanged: (bool? newValue) {
-                                        setState(() {
-                                          isChecked = newValue!;
-                                        });
-                                      }),
-                                  Text(
-                                    'I have read the agreement and I accept it',
-                                    style: TextStyle(fontSize: 10),
-                                  )
-                                ],
-                              )),
+                          // Container(
+                          //     width: 325,
+                          //     child: Row(
+                          //       mainAxisAlignment: MainAxisAlignment.center,
+                          //       children: [
+                          //         Checkbox(
+                          //             value: _isSelected,
+                          //             onChanged: (bool? newValue) {
+                          //               setState(() {
+                          //                 _isSelected = newValue!;
+                          //               });
+                          //             }),
+                          //         Text(
+                          //           'I have read the agreement and I accept it',
+                          //           style: TextStyle(fontSize: 10),
+                          //         )
+                          //       ],
+                          //     )),
                           Container(
                             height: 50.0,
                             width: 345,
@@ -1132,7 +1135,7 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
                       backgroundColor: AppColors.blueDarkColor),
                   // onPressed: isChecked ? saveItem() : null,
                   onPressed: () {
-                    saveItem() ? null : null;
+                    saveItem();
                   },
                 ),
               ),
