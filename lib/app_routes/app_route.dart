@@ -4,6 +4,7 @@ import 'package:marketplace/error_screen.dart';
 import 'package:marketplace/model/Agreement.dart';
 import 'package:marketplace/model/product_model.dart';
 import 'package:marketplace/screens/TnC.dart';
+import 'package:marketplace/screens/edit_product_image_picker.dart';
 import 'package:marketplace/screens/final_screen.dart';
 import 'package:marketplace/screens/home_screen.dart';
 import 'package:marketplace/screens/login_page.dart';
@@ -31,6 +32,7 @@ class RouteCon {
   static const privacy = 'privacy';
   static const useragr = "useragr";
   static const signoff = "signoff";
+  static const editproduct = "editproduct";
 }
 
 class AppRoutes {
@@ -50,6 +52,14 @@ class AppRoutes {
           } else {
             return '/login';
           }
+        },
+      ),
+      GoRoute(
+        name: RouteCon.editproduct,
+        path: "/editproduct",
+        builder: (context, state) {
+          Product pro = state.extra as Product;
+          return EditProduct(p: pro);
         },
       ),
       GoRoute(

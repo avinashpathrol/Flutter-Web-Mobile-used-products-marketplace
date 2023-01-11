@@ -98,7 +98,7 @@ class _DetailState extends State<Detail> {
                                     15,
                                   ),
                                   image: DecorationImage(
-                                    image: NetworkImage(product!.img),
+                                    image: NetworkImage(product!.img!),
                                   ),
                                 ),
                               ),
@@ -130,7 +130,7 @@ class _DetailState extends State<Detail> {
                       SizedBox(
                         width: size.width / 1.2,
                         child: Text(
-                          product!.name,
+                          product!.name!,
                           style: const TextStyle(
                             fontSize: 24,
                             color: Color.fromARGB(255, 0, 0, 0),
@@ -191,7 +191,7 @@ class _DetailState extends State<Detail> {
                       SizedBox(
                         width: size.width / 1.2,
                         child: Text(
-                          product!.description,
+                          product!.description!,
                           style: TextStyle(
                             fontSize: 16,
                           ),
@@ -218,7 +218,7 @@ class _DetailState extends State<Detail> {
                       SizedBox(
                         width: size.width / 1.2,
                         child: Text(
-                          product!.seller_name,
+                          product!.seller_name!,
                           style: TextStyle(
                             fontSize: 16,
                           ),
@@ -246,7 +246,7 @@ class _DetailState extends State<Detail> {
                       SizedBox(
                         width: size.width / 1.2,
                         child: Text(
-                          product!.location,
+                          product!.location!,
                           style: TextStyle(
                             fontSize: 16,
                           ),
@@ -273,7 +273,7 @@ class _DetailState extends State<Detail> {
                       SizedBox(
                         width: size.width / 1.2,
                         child: Text(
-                          product!.date,
+                          product!.date!,
                           style: TextStyle(
                             fontSize: 16,
                           ),

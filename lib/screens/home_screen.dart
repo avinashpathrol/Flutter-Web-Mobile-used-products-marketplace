@@ -47,10 +47,17 @@ class HomeScreen extends StatelessWidget {
             FirebaseFirestore.instance.collection("productData").snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
-            return CircularProgressIndicator();
+            return Center(child: CircularProgressIndicator());
           }
           if (snapshot.data!.docs.length == 0) {
-            return Text("NO DATA");
+            return Center(
+                child: Text(
+              "NO DATA / Add some product's".toUpperCase(),
+              style: TextStyle(
+                  fontSize: 40,
+                  color: Colors.grey,
+                  fontWeight: FontWeight.bold),
+            ));
           }
           List<Product> loginUserData = [];
           snapshot.data!.docs.forEach((result) {
@@ -76,7 +83,7 @@ class HomeScreen extends StatelessWidget {
               return InkWell(
                 onTap: () {
                   GoRouter.of(context).goNamed(RouteCon.productdetail,
-                      params: {"productId": loginUserData[index].productId});
+                      params: {"productId": loginUserData[index].productId!});
                 },
                 child: Card(
                   child: Column(
@@ -87,7 +94,7 @@ class HomeScreen extends StatelessWidget {
                         // height: MediaQuery.of(context).size.height * 0.35,
                         // width: MediaQuery.of(context).size.width * 0.3,
                         child: Image.network(
-                          loginUserData[index].img,
+                          loginUserData[index].img!,
                           fit: BoxFit.cover,
                         ),
                       ),
