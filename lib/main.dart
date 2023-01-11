@@ -4,6 +4,7 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:marketplace/app_routes/app_route.dart';
 
+////////////////////////////////////////////////////
 void configureApp() {
   setUrlStrategy(PathUrlStrategy());
 }

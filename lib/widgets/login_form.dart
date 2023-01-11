@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
+import 'package:go_router/go_router.dart';
+import 'package:marketplace/app_routes/app_route.dart';
 import 'package:marketplace/screens/forgot_password.dart';
 import 'package:marketplace/screens/home_screen.dart';
 import 'package:marketplace/screens/product_image_picker.dart';
@@ -216,11 +218,12 @@ class LoginForm extends StatelessWidget {
                 //         password: _passwordTextController.text)
                 //     .then((value) {
                 //   //print(value.user?.uid);
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => HomeScreen(),
-                    ));
+                // Navigator.push(
+                //     context,
+                //     MaterialPageRoute(
+                //       builder: (context) => HomeScreen(),
+                //     ));
+                GoRouter.of(context).pushNamed(RouteCon.home);
               }
             },
             borderRadius: BorderRadius.circular(16.0),

@@ -302,7 +302,7 @@ class _ProductOverviewState extends State<ProductOverview>
                                   15,
                                 ),
                                 image: DecorationImage(
-                                  image: NetworkImage(widget.product.img),
+                                  image: NetworkImage(widget.product.img!),
                                 ),
                               ),
                             ),
@@ -334,7 +334,7 @@ class _ProductOverviewState extends State<ProductOverview>
                     SizedBox(
                       width: size.width / 1.2,
                       child: Text(
-                        widget.product.name,
+                        widget.product.name!,
                         style: const TextStyle(
                           fontSize: 24,
                           color: Color.fromARGB(255, 0, 0, 0),
@@ -396,7 +396,7 @@ class _ProductOverviewState extends State<ProductOverview>
                     SizedBox(
                       width: size.width / 1.2,
                       child: Text(
-                        widget.product.description,
+                        widget.product.description!,
                         style: TextStyle(
                           fontSize: 16,
                         ),
@@ -424,7 +424,7 @@ class _ProductOverviewState extends State<ProductOverview>
                     SizedBox(
                       width: size.width / 1.2,
                       child: Text(
-                        widget.product.location,
+                        widget.product.location!,
                         style: TextStyle(
                           fontSize: 16,
                         ),
@@ -451,7 +451,7 @@ class _ProductOverviewState extends State<ProductOverview>
                     SizedBox(
                       width: size.width / 1.2,
                       child: Text(
-                        widget.product.date,
+                        widget.product.date!,
                         style: TextStyle(
                           fontSize: 16,
                         ),
