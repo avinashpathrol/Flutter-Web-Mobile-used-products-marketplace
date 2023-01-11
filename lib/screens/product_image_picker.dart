@@ -31,14 +31,8 @@ class ProductImagePicker extends StatefulWidget {
 }
 
 class _ProductImagePickerState extends State<ProductImagePicker> {
-  bool _afternoonOutdoor = false;
-  String caption_afternoon_outdoor = 'Afternoon Outdoor';
-
-  _afternoonOutdoorChanged(bool value) =>
-      setState(() => _afternoonOutdoor = value);
-
-  bool valuefirst = false;
-  bool valuesecond = false;
+  bool isChecked = false;
+  bool _isSelected = false;
   final Size size = Get.size;
   int myIndex = 0;
   List<Widget> widgetList = [HomeScreen(), Profile()];
@@ -338,17 +332,8 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
     });
   }
 
-  bool isChecked = false;
   @override
   Widget build(BuildContext context) {
-    bool showvalue;
-    bool value;
-    bool _checkbox = false;
-    bool _checkboxListTile = false;
-    bool isRememberMe;
-    bool? _value = false;
-
-    bool isChecked = false;
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60.0),
@@ -791,6 +776,27 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
                   ),
                 ),
               ),
+              Container(
+                  width: 325,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Checkbox(
+                          value: isChecked,
+                          onChanged: (bool? newValue) {
+                            setState(() {
+                              isChecked = newValue!;
+                            });
+                          }),
+                      SizedBox(
+                        height: size.height / 80,
+                      ),
+                      Text(
+                        'I have read the agreement and I accept it',
+                        style: TextStyle(fontSize: 16),
+                      )
+                    ],
+                  )),
               const SizedBox(
                 height: 5,
               ),
@@ -1033,19 +1039,54 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
                 height: 20,
               ),
               Container(
-                width: 325,
-                // child: ElevatedButton(
-                //   child: const Text('firestore'),
-                //   style: ElevatedButton.styleFrom(
-                //       backgroundColor: AppColors.blueDarkColor),
-                //   onPressed: () {
-                //     Navigator.push(
-                //       context,
-                //       MaterialPageRoute(builder: (context) => saveData()),
-                //     );
-                //   },
-                // ),
-              ),
+                  height: 50.0,
+                  width: 345,
+                  child: TextButton(
+                    onPressed: () => showDialog<String>(
+                      context: context,
+                      builder: (BuildContext context) => AlertDialog(
+                        // title: const Text('AlertDialog Title'),
+                        content: const Text('To confirm click confirm button'),
+
+                        actions: <Widget>[
+                          // Container(
+                          //     width: 325,
+                          //     child: Row(
+                          //       mainAxisAlignment: MainAxisAlignment.center,
+                          //       children: [
+                          //         Checkbox(
+                          //             value: _isSelected,
+                          //             onChanged: (bool? newValue) {
+                          //               setState(() {
+                          //                 _isSelected = newValue!;
+                          //               });
+                          //             }),
+                          //         Text(
+                          //           'I have read the agreement and I accept it',
+                          //           style: TextStyle(fontSize: 10),
+                          //         )
+                          //       ],
+                          //     )),
+                          Container(
+                            height: 50.0,
+                            width: 345,
+                            child: ElevatedButton(
+                              child: const Text('Confirm'),
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.blueDarkColor),
+                              onPressed: () {
+                                saveItem();
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    child: const Text('Confirm'),
+                    style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: AppColors.blueDarkColor),
+                  )),
               const SizedBox(
                 height: 20,
               ),
@@ -1085,17 +1126,17 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
               const SizedBox(
                 height: 20,
               ),
-              Container(
-                width: 325,
-                child: ElevatedButton(
-                  child: const Text('Continue'),
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.blueDarkColor),
-                  onPressed: () {
-                    saveItem();
-                  },
-                ),
-              ),
+              // Container(
+              //   width: 325,
+              //   child: ElevatedButton(
+              //     child: const Text('Continue'),
+              //     style: ElevatedButton.styleFrom(
+              //         backgroundColor: AppColors.blueDarkColor),
+              //     onPressed: () {
+              //       saveItem();
+              //     },
+              //   ),
+              // ),
 
               //==============================================//
               SizedBox(

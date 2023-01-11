@@ -177,6 +177,8 @@ class _ProductOverviewState extends State<ProductOverview>
   TextEditingController _signatureController = TextEditingController();
 
   bool isLoading = false;
+  bool isChecked = false;
+  bool _isSelected = false;
   GlobalKey<SfSignaturePadState> key = GlobalKey();
   double min = 4.0;
   Uuid? v;
@@ -517,6 +519,27 @@ class _ProductOverviewState extends State<ProductOverview>
                         ),
                       ),
                     ),
+                    Container(
+                        width: 325,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Checkbox(
+                                value: isChecked,
+                                onChanged: (bool? newValue) {
+                                  setState(() {
+                                    isChecked = newValue!;
+                                  });
+                                }),
+                            SizedBox(
+                              height: size.height / 80,
+                            ),
+                            Text(
+                              'I have read the agreement and I accept it',
+                              style: TextStyle(fontSize: 16),
+                            )
+                          ],
+                        )),
                     SizedBox(
                       height: size.height / 100,
                     ),
@@ -985,18 +1008,51 @@ class _ProductOverviewState extends State<ProductOverview>
                     const SizedBox(
                       height: 20,
                     ),
+                    // Container(
+                    //   height: 50.0,
+                    //   width: 345,
+                    //   child: ElevatedButton(
+                    //     child: const Text('Confirm'),
+                    //     style: ElevatedButton.styleFrom(
+                    //         backgroundColor: AppColors.blueDarkColor),
+                    //     onPressed: () {
+                    //       UpdateAgreement();
+                    //     },
+                    //   ),
+                    // ),
                     Container(
-                      height: 50.0,
-                      width: 345,
-                      child: ElevatedButton(
-                        child: const Text('Confirm'),
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.blueDarkColor),
-                        onPressed: () {
-                          UpdateAgreement();
-                        },
-                      ),
-                    ),
+                        height: 50.0,
+                        width: 345,
+                        child: TextButton(
+                          onPressed: () => showDialog<String>(
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                              title: const Text('AlertDialog Title'),
+                              content:
+                                  const Text('To confirm click confirm button'),
+                              actions: <Widget>[
+                                Container(
+                                  height: 50.0,
+                                  width: 345,
+                                  child: ElevatedButton(
+                                    child: const Text('Confirm'),
+                                    style: ElevatedButton.styleFrom(
+                                        foregroundColor: Colors.white,
+                                        backgroundColor:
+                                            AppColors.blueDarkColor),
+                                    onPressed: () {
+                                      UpdateAgreement();
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          child: const Text('Confirm'),
+                          style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              backgroundColor: AppColors.blueDarkColor),
+                        )),
 
                     const SizedBox(
                       height: 20,
