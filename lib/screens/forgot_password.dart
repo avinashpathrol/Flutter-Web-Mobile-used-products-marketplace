@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:marketplace/screens/app_colors.dart';
+import '../utils/styles/app_styles.dart';
+import '../utils/styles/app_colors.dart';
 import 'package:marketplace/utils/utils.dart';
 import 'package:marketplace/widgets/round_button.dart';
 

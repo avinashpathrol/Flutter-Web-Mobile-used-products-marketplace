@@ -1,17 +1,12 @@
-import 'dart:js';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
-import 'package:go_router/go_router.dart';
-import 'package:marketplace/app_routes/app_route.dart';
 import 'package:marketplace/model/Agreement.dart';
-import 'package:marketplace/screens/login_page.dart';
-import 'package:marketplace/screens/myProfile.dart';
 
+import '../components/topbar.dart';
 import 'data_controller.dart';
 
 class SignOff extends StatelessWidget {
@@ -28,144 +23,9 @@ class SignOff extends StatelessWidget {
           child: GetBuilder<DataController>(
             builder: (value) {
               return Scaffold(
-                appBar: AppBar(
-                  leading: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Image.asset(
-                      'assets/images/eagree.png',
-                      fit: BoxFit.cover,
-                      height: 100,
-                      width: 100,
-                    ),
-                  ),
-                  backgroundColor: Color.fromARGB(255, 255, 255, 255),
-                  actions: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: TextButton(
-                          style: ButtonStyle(
-                            foregroundColor: MaterialStateProperty.all<Color>(
-                                Color.fromARGB(255, 19, 38, 94)),
-                            overlayColor:
-                                MaterialStateProperty.resolveWith<Color?>(
-                              (Set<MaterialState> states) {
-                                if (states.contains(MaterialState.hovered))
-                                  return Color.fromARGB(255, 19, 38, 94)
-                                      .withOpacity(0.04);
-                                if (states.contains(MaterialState.focused) ||
-                                    states.contains(MaterialState.pressed))
-                                  return Color.fromARGB(255, 19, 38, 94)
-                                      .withOpacity(0.12);
-                                return null; // Defer to the widget's default.
-                              },
-                            ),
-                          ),
-                          onPressed: () {
-                            GoRouter.of(context).goNamed(RouteCon.home);
-
-                            // Navigator.push(context,
-                            //     MaterialPageRoute(builder: (context) => HomeScreen()));
-                          },
-                          child: Column(children: [
-                            Icon(
-                              Icons.storefront,
-                            ),
-                            TextButton(
-                              child: Text(
-                                "Marketplace",
-                                style: TextStyle(
-                                    color: Color.fromARGB(255, 19, 38, 94)),
-                              ),
-                              onPressed: () => {},
-                            ),
-                          ])),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: TextButton(
-                        style: ButtonStyle(
-                          foregroundColor: MaterialStateProperty.all<Color>(
-                              Color.fromARGB(255, 19, 38, 94)),
-                          overlayColor:
-                              MaterialStateProperty.resolveWith<Color?>(
-                            (Set<MaterialState> states) {
-                              if (states.contains(MaterialState.hovered))
-                                return Color.fromARGB(255, 19, 38, 94)
-                                    .withOpacity(0.04);
-                              if (states.contains(MaterialState.focused) ||
-                                  states.contains(MaterialState.pressed))
-                                return Color.fromARGB(255, 19, 38, 94)
-                                    .withOpacity(0.12);
-                              return null; // Defer to the widget's default.
-                            },
-                          ),
-                        ),
-                        onPressed: () {
-                          GoRouter.of(context).goNamed(RouteCon.addproduct);
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (context) => ProductImagePicker()));
-                        },
-                        child: Column(children: [
-                          Icon(
-                            Icons.add_business,
-                          ),
-                          TextButton(
-                            child: Text(
-                              "Add Product",
-                              style: TextStyle(
-                                  color: Color.fromARGB(255, 19, 38, 94)),
-                            ),
-                            onPressed: () => {},
-                          ),
-                        ]),
-                      ),
-                    ),
-                    PopupMenuButton(
-                        // icon: Icon(Icons.access_alarm),
-                        iconSize: 30,
-                        color: Color.fromARGB(255, 215, 215, 215),
-                        itemBuilder: (BuildContext context) =>
-                            <PopupMenuEntry<int>>[
-                              const PopupMenuItem<int>(
-                                value: 0,
-                                child: Text('Profile'),
-                              ),
-                              const PopupMenuItem<int>(
-                                value: 1,
-                                child: Text('Log Out'),
-                              ),
-                            ],
-                        onSelected: (value) {
-                          if (value == 0) {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Profile()));
-                          } else if (value == 1) {
-                            print('inside logout function');
-                            _signOut() async {
-                              await FirebaseAuth.instance.signOut();
-                            }
-
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const LoginPage()));
-                          } else if (value == 2) {
-                            print('inside logout function');
-                            _signOut() async {
-                              await FirebaseAuth.instance.signOut();
-                            }
-
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const LoginPage()));
-                          }
-                        })
-                  ],
+                appBar: PreferredSize(
+                  preferredSize: Size.fromHeight(60.0),
+                  child: TopBar(),
                 ),
                 backgroundColor: Color.fromARGB(255, 255, 255, 255),
                 body: SafeArea(

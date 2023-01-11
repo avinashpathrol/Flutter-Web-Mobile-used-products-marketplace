@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:marketplace/constant.dart';
-import 'package:marketplace/screens/app_colors.dart';
+import '../utils/styles/app_styles.dart';
+import '../utils/styles/app_colors.dart';
 import '../constant.dart';
 
 class AlreadyHaveAnAccountCheck extends StatelessWidget {

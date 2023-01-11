@@ -47,6 +47,10 @@ dependencies:
   flutter_html_to_pdf: ^0.7.0
   syncfusion_flutter_pdfviewer: ^20.4.38
   image_network: ^2.5.1
+  intl: ^0.17.0
+  geolocator: ^9.0.2
+  geocoding: ^2.0.5
+  open_street_map_search_and_pick: ^0.0.15
 
 
 dev_dependencies:

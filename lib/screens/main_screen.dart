@@ -1,42 +1,26 @@
-import 'dart:io';
+import 'dart:io' as io;
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/foundation.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:marketplace/screens/app_colors.dart';
-import 'package:marketplace/screens/app_icons.dart';
-import 'package:marketplace/screens/app_styles.dart';
 import 'package:marketplace/screens/complete_agreement_page.dart';
 // import 'package:marketplace/model/user.dart';
 import 'package:marketplace/screens/data_controller.dart';
-
 import 'package:marketplace/screens/home_screen.dart';
 import 'package:marketplace/screens/image.dart';
-import 'package:marketplace/screens/login_user_product_screen.dart';
-
-import 'package:marketplace/screens/image.dart';
-
 import 'package:marketplace/screens/product_image_picker.dart';
 import 'package:marketplace/screens/review_page.dart';
 import 'package:marketplace/screens/save_data.dart';
 import 'package:signature/signature.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart' as firebase_core;
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-import 'package:image_picker/image_picker.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uuid/uuid.dart';
-import 'auth.dart';
-import 'dart:io' as io;
+
+import '../utils/styles/app_colors.dart';
+import '../utils/styles/app_styles.dart';
 
 // import '../model/book.dart';
 final ImagePicker _picker = ImagePicker();

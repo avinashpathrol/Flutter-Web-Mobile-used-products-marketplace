@@ -7,6 +7,7 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:marketplace/app_routes/app_route.dart';
+import 'package:marketplace/components/topbar.dart';
 import 'package:marketplace/model/product_model.dart';
 import 'package:marketplace/screens/TnC.dart';
 import 'package:marketplace/screens/data_controller.dart';
@@ -18,6 +19,8 @@ import 'package:marketplace/screens/privacy.dart';
 import 'package:marketplace/screens/product_image_picker.dart';
 import 'package:marketplace/screens/product_overview.dart';
 import 'package:marketplace/screens/user_agreement.dart';
+
+import '../components/bottom_bar.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -34,283 +37,103 @@ class HomeScreen extends StatelessWidget {
     });
 
     return Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          leading: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Image.asset(
-              'assets/images/eagree.png',
-              fit: BoxFit.cover,
-              height: 100,
-              width: 100,
-            ),
-          ),
-          backgroundColor: Color.fromARGB(255, 255, 255, 255),
-          actions: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: TextButton(
-                  style: ButtonStyle(
-                    foregroundColor: MaterialStateProperty.all<Color>(
-                        Color.fromARGB(255, 19, 38, 94)),
-                    overlayColor: MaterialStateProperty.resolveWith<Color?>(
-                      (Set<MaterialState> states) {
-                        if (states.contains(MaterialState.hovered))
-                          return Color.fromARGB(255, 19, 38, 94)
-                              .withOpacity(0.04);
-                        if (states.contains(MaterialState.focused) ||
-                            states.contains(MaterialState.pressed))
-                          return Color.fromARGB(255, 19, 38, 94)
-                              .withOpacity(0.12);
-                        return null; // Defer to the widget's default.
-                      },
-                    ),
-                  ),
-                  onPressed: () {
-                    GoRouter.of(context).goNamed(RouteCon.home);
-
-                    // Navigator.push(context,
-                    //     MaterialPageRoute(builder: (context) => HomeScreen()));
-                  },
-                  child: Column(children: [
-                    Icon(
-                      Icons.storefront,
-                    ),
-                    TextButton(
-                      child: Text(
-                        "Marketplace",
-                        style:
-                            TextStyle(color: Color.fromARGB(255, 19, 38, 94)),
-                      ),
-                      onPressed: () => {},
-                    ),
-                  ])),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: TextButton(
-                style: ButtonStyle(
-                  foregroundColor: MaterialStateProperty.all<Color>(
-                      Color.fromARGB(255, 19, 38, 94)),
-                  overlayColor: MaterialStateProperty.resolveWith<Color?>(
-                    (Set<MaterialState> states) {
-                      if (states.contains(MaterialState.hovered))
-                        return Color.fromARGB(255, 19, 38, 94)
-                            .withOpacity(0.04);
-                      if (states.contains(MaterialState.focused) ||
-                          states.contains(MaterialState.pressed))
-                        return Color.fromARGB(255, 19, 38, 94)
-                            .withOpacity(0.12);
-                      return null; // Defer to the widget's default.
-                    },
-                  ),
-                ),
-                onPressed: () {
-                  GoRouter.of(context).goNamed(RouteCon.addproduct);
-                  // Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //         builder: (context) => ProductImagePicker()));
-                },
-                child: Column(children: [
-                  Icon(
-                    Icons.add_business,
-                  ),
-                  TextButton(
-                    child: Text(
-                      "Add Product",
-                      style: TextStyle(color: Color.fromARGB(255, 19, 38, 94)),
-                    ),
-                    onPressed: () => {},
-                  ),
-                ]),
+      resizeToAvoidBottomInset: false,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(60.0),
+        child: TopBar(),
+      ),
+      body: StreamBuilder(
+        stream:
+            FirebaseFirestore.instance.collection("productData").snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (!snapshot.hasData) {
+            return CircularProgressIndicator();
+          }
+          if (snapshot.data!.docs.length == 0) {
+            return Text("NO DATA");
+          }
+          List<Product> loginUserData = [];
+          snapshot.data!.docs.forEach((result) {
+            loginUserData.add(
+              Product(
+                productId: result['productId'],
+                signature: result['signature'],
+                seller_name: result['seller_name'],
+                userId: result['user_Id'],
+                name: result['name'],
+                price: result['price'],
+                img: result['img'],
+                description: result['description'],
+                location: result['location'],
+                date: result['date'],
               ),
-            ),
-            PopupMenuButton(
-                // icon: Icon(Icons.access_alarm),
-                iconSize: 30,
-                color: Color.fromARGB(255, 215, 215, 215),
-                itemBuilder: (BuildContext context) => <PopupMenuEntry<int>>[
-                      const PopupMenuItem<int>(
-                        value: 0,
-                        child: Text('Profile'),
+            );
+          });
+          return ListView.builder(
+            itemCount: snapshot.data!.docs.length,
+            itemBuilder: (BuildContext context, int index) {
+              // Product product = snapshot.data!.docs[index];
+              return InkWell(
+                onTap: () {
+                  GoRouter.of(context).goNamed(RouteCon.productdetail,
+                      params: {"productId": loginUserData[index].productId});
+                },
+                child: Card(
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 300,
+                        width: 400,
+                        // height: MediaQuery.of(context).size.height * 0.35,
+                        // width: MediaQuery.of(context).size.width * 0.3,
+                        child: Image.network(
+                          loginUserData[index].img,
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                      const PopupMenuItem<int>(
-                        value: 1,
-                        child: Text('Log Out'),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Product Name: ${loginUserData[index].name}",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              'Price:\$${loginUserData[index].price.toString()}',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            // ElevatedButton(
+                            //   onPressed: () {
+                            //     Navigator.push(
+                            //         context,
+                            //         MaterialPageRoute(
+                            //             builder: (context) =>
+                            //                 ProductOverview(product)));
+                            //   },
+                            //   child: Text(''),
+                            // ),
+                          ],
+                        ),
                       ),
                     ],
-                onSelected: (value) async {
-                  if (value == 0) {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Profile()));
-                  } else if (value == 1) {
-                    print('inside logout function');
-                    _signOut() async {
-                      await FirebaseAuth.instance.signOut();
-                    }
-
-                    print('leaving logout function');
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const LoginPage()));
-                  } else if (value == 2) {
-                    print('inside logout function');
-                    _signOut() async {
-                      await FirebaseAuth.instance.signOut();
-                      FacebookAuth.instance.logOut();
-                    }
-
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const LoginPage()));
-                  }
-                })
-          ],
-        ),
-        body: StreamBuilder(
-          stream:
-              FirebaseFirestore.instance.collection("productData").snapshots(),
-          builder:
-              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (!snapshot.hasData) {
-              return CircularProgressIndicator();
-            }
-            if (snapshot.data!.docs.length == 0) {
-              return Text("NO DATA");
-            }
-            List<Product> loginUserData = [];
-            snapshot.data!.docs.forEach((result) {
-              loginUserData.add(
-                Product(
-                  productId: result['productId'],
-                  signature: result['signature'],
-                  seller_name: result['seller_name'],
-                  userId: result['user_Id'],
-                  name: result['name'],
-                  price: result['price'],
-                  img: result['img'],
-                  description: result['description'],
-                  location: result['location'],
-                  date: result['date'],
+                  ),
                 ),
               );
-            });
-            return ListView.builder(
-              itemCount: snapshot.data!.docs.length,
-              itemBuilder: (BuildContext context, int index) {
-                // Product product = snapshot.data!.docs[index];
-                return InkWell(
-                  onTap: () {
-                    GoRouter.of(context).goNamed(RouteCon.productdetail,
-                        params: {"productId": loginUserData[index].productId});
-                  },
-                  child: Card(
-                    child: Column(
-                      children: [
-                        Container(
-                          height: 300,
-                          width: 400,
-                          // height: MediaQuery.of(context).size.height * 0.35,
-                          // width: MediaQuery.of(context).size.width * 0.3,
-                          child: Image.network(
-                            loginUserData[index].img,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "Product Name: ${loginUserData[index].name}",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                'Price:\$${loginUserData[index].price.toString()}',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              // ElevatedButton(
-                              //   onPressed: () {
-                              //     Navigator.push(
-                              //         context,
-                              //         MaterialPageRoute(
-                              //             builder: (context) =>
-                              //                 ProductOverview(product)));
-                              //   },
-                              //   child: Text(''),
-                              // ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            );
-          },
-        ),
-        bottomNavigationBar: Container(
-          height: size.height / 14,
-          width: size.width,
-          color: Color.fromARGB(255, 19, 38, 94),
-          child: Row(
-            children: <Widget>[
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 19, 38, 94)),
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Terms()));
-                },
-                child: Text(
-                  'Term and Conditions',
-                  style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              Spacer(),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 19, 38, 94)),
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Privacy()));
-                },
-                child: Text(
-                  'Privacy',
-                  style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              Spacer(),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 19, 38, 94)),
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => UserAgreement()));
-                },
-                child: Text(
-                  'User Licence Agreement',
-                  style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ],
-          ),
-        ));
+            },
+          );
+        },
+      ),
+      bottomNavigationBar: BottomBar(size: size),
+    );
   }
 }

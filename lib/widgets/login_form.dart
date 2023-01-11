@@ -7,9 +7,9 @@ import 'package:marketplace/screens/home_screen.dart';
 import 'package:marketplace/screens/product_image_picker.dart';
 import 'package:marketplace/widgets/create_account_form.dart';
 import '../screens/main_screen.dart';
-import 'package:marketplace/screens/app_colors.dart';
-import 'package:marketplace/screens/app_icons.dart';
-import 'package:marketplace/screens/app_styles.dart';
+import '../utils/styles/app_colors.dart';
+import '../utils/styles/app_icons.dart';
+import '../utils/styles/app_styles.dart';
 
 class LoginForm extends StatelessWidget {
   LoginForm({

@@ -1,27 +1,29 @@
 import 'dart:convert';
 import 'dart:typed_data';
+import 'dart:ui' as ui;
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firabase_storage;
 import 'package:flutter/material.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firabase_storage;
-import 'package:marketplace/app_routes/app_route.dart';
-import 'package:marketplace/screens/app_colors.dart';
-import 'package:marketplace/screens/app_styles.dart';
-import 'package:marketplace/screens/eco_button.dart';
+import 'package:intl/intl.dart';
+import 'package:marketplace/components/topbar.dart';
 import 'package:marketplace/screens/home_screen.dart';
-import 'package:marketplace/screens/login_page.dart';
-import 'package:marketplace/screens/login_user_product_screen.dart';
 import 'package:marketplace/screens/myProfile.dart';
+import 'package:open_street_map_search_and_pick/open_street_map_search_and_pick.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
-import 'dart:ui' as ui;
-
 import 'package:uuid/uuid.dart';
+
+import '../utils/styles/app_colors.dart';
+import '../utils/styles/app_styles.dart';
 
 class ProductImagePicker extends StatefulWidget {
   @override
@@ -29,9 +31,14 @@ class ProductImagePicker extends StatefulWidget {
 }
 
 class _ProductImagePickerState extends State<ProductImagePicker> {
-  bool isChecked = false;
-  bool _isSelected = false;
+  bool _afternoonOutdoor = false;
+  String caption_afternoon_outdoor = 'Afternoon Outdoor';
 
+  _afternoonOutdoorChanged(bool value) =>
+      setState(() => _afternoonOutdoor = value);
+
+  bool valuefirst = false;
+  bool valuesecond = false;
   final Size size = Get.size;
   int myIndex = 0;
   List<Widget> widgetList = [HomeScreen(), Profile()];
@@ -79,6 +86,7 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
   void initState() {
     //deleteVegetable();
     super.initState();
+    _getCurrentLocation();
   }
 
   @override
@@ -97,6 +105,114 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
         selectedImageInBytes = fileResult.files.first.bytes!;
       });
     }
+  }
+
+  _selectDate(BuildContext context) async {
+    final DateTime? selected = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2010),
+      lastDate: DateTime(2025),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: Colors.amberAccent, // <-- SEE HERE
+              onPrimary: Colors.redAccent, // <-- SEE HERE
+              onSurface: Colors.blueAccent, // <-- SEE HERE
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                primary: Colors.red, // button text color
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+    setState(() {
+      if (selected != null) {
+        String fdate = DateFormat('yyyy-MM-dd').format(selected);
+        _itemDateController.text = fdate;
+      }
+    });
+  }
+
+  Position? _curentPosition;
+  String? _curentAddress;
+  LocationPermission? permission;
+
+  _getCurrentLocation() async {
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      Fluttertoast.showToast(msg: "Location permissions are  denind");
+      if (permission == LocationPermission.deniedForever) {
+        Fluttertoast.showToast(
+            msg: "Location permissions are permanently denind");
+      }
+    }
+    Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.high,
+            forceAndroidLocationManager: false)
+        .then((Position position) {
+      setState(() {
+        _curentPosition = position;
+        print("ok ${_curentPosition!.latitude}");
+        // _getAddressFromLatLon();
+      });
+    }).catchError((e) {
+      Fluttertoast.showToast(msg: e.toString());
+    });
+  }
+
+  _getAddressFromLatLon() async {
+    try {
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+          _curentPosition!.latitude, _curentPosition!.longitude);
+
+      Placemark place = placemarks[0];
+      setState(() {
+        _curentAddress =
+            "${place.locality},${place.postalCode},${place.street},";
+        _itemLocationController.text = _curentAddress!;
+      });
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+    }
+  }
+
+  userLoc() {
+    showDialog(
+        context: context,
+        builder: (context) => SimpleDialog(
+              children: [
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: IconButton(
+                      onPressed: () {
+                        GoRouter.of(context).pop();
+                      },
+                      icon: Icon(Icons.close)),
+                ),
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.7,
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  child: OpenStreetMapSearchAndPick(
+                      center: LatLong(_curentPosition!.latitude,
+                          _curentPosition!.longitude),
+                      buttonColor: Colors.blue,
+                      buttonText: 'Set Current Location',
+                      onPicked: (pickedData) {
+                        setState(() {
+                          _itemLocationController.text = pickedData.address;
+                        });
+                        GoRouter.of(context).pop();
+                      }),
+                ),
+              ],
+            ));
   }
 
   Future<UploadTask?> uploadFile1(Uint8List? file) async {
@@ -222,139 +338,21 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
     });
   }
 
+  bool isChecked = false;
   @override
   Widget build(BuildContext context) {
+    bool showvalue;
+    bool value;
+    bool _checkbox = false;
+    bool _checkboxListTile = false;
+    bool isRememberMe;
+    bool? _value = false;
+
+    bool isChecked = false;
     return Scaffold(
-      appBar: AppBar(
-        leading: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Image.asset(
-            'assets/images/eagree.png',
-            fit: BoxFit.cover,
-            height: 100,
-            width: 100,
-          ),
-        ),
-        backgroundColor: Color.fromARGB(255, 255, 255, 255),
-        actions: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: TextButton(
-                style: ButtonStyle(
-                  foregroundColor: MaterialStateProperty.all<Color>(
-                      Color.fromARGB(255, 19, 38, 94)),
-                  overlayColor: MaterialStateProperty.resolveWith<Color?>(
-                    (Set<MaterialState> states) {
-                      if (states.contains(MaterialState.hovered))
-                        return Color.fromARGB(255, 19, 38, 94)
-                            .withOpacity(0.04);
-                      if (states.contains(MaterialState.focused) ||
-                          states.contains(MaterialState.pressed))
-                        return Color.fromARGB(255, 19, 38, 94)
-                            .withOpacity(0.12);
-                      return null; // Defer to the widget's default.
-                    },
-                  ),
-                ),
-                onPressed: () {
-                  GoRouter.of(context).goNamed(RouteCon.home);
-
-                  // Navigator.push(context,
-                  //     MaterialPageRoute(builder: (context) => HomeScreen()));
-                },
-                child: Column(children: [
-                  Icon(
-                    Icons.storefront,
-                  ),
-                  TextButton(
-                    child: Text(
-                      "Marketplace",
-                      style: TextStyle(color: Color.fromARGB(255, 19, 38, 94)),
-                    ),
-                    onPressed: () => {},
-                  ),
-                ])),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: TextButton(
-              style: ButtonStyle(
-                foregroundColor: MaterialStateProperty.all<Color>(
-                    Color.fromARGB(255, 19, 38, 94)),
-                overlayColor: MaterialStateProperty.resolveWith<Color?>(
-                  (Set<MaterialState> states) {
-                    if (states.contains(MaterialState.hovered))
-                      return Color.fromARGB(255, 19, 38, 94).withOpacity(0.04);
-                    if (states.contains(MaterialState.focused) ||
-                        states.contains(MaterialState.pressed))
-                      return Color.fromARGB(255, 19, 38, 94).withOpacity(0.12);
-                    return null; // Defer to the widget's default.
-                  },
-                ),
-              ),
-              onPressed: () {
-                GoRouter.of(context).goNamed(RouteCon.addproduct);
-                // Navigator.push(
-                //     context,
-                //     MaterialPageRoute(
-                //         builder: (context) => ProductImagePicker()));
-              },
-              child: Column(children: [
-                Icon(
-                  Icons.add_business,
-                ),
-                TextButton(
-                  child: Text(
-                    "Add Product",
-                    style: TextStyle(color: Color.fromARGB(255, 19, 38, 94)),
-                  ),
-                  onPressed: () => {},
-                ),
-              ]),
-            ),
-          ),
-          PopupMenuButton(
-              // icon: Icon(Icons.access_alarm),
-              iconSize: 30,
-              color: Color.fromARGB(255, 215, 215, 215),
-              itemBuilder: (BuildContext context) => <PopupMenuEntry<int>>[
-                    const PopupMenuItem<int>(
-                      value: 0,
-                      child: Text('Profile'),
-                    ),
-                    const PopupMenuItem<int>(
-                      value: 1,
-                      child: Text('Log Out'),
-                    ),
-                  ],
-              onSelected: (value) {
-                if (value == 0) {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Profile()));
-                } else if (value == 1) {
-                  print('inside logout function');
-                  _signOut() async {
-                    await FirebaseAuth.instance.signOut();
-                    FacebookAuth.instance.logOut();
-                  }
-
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const LoginPage()));
-                } else if (value == 2) {
-                  print('inside logout function');
-                  _signOut() async {
-                    await FirebaseAuth.instance.signOut();
-                  }
-
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const LoginPage()));
-                }
-              })
-        ],
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(60.0),
+        child: TopBar(),
       ),
       backgroundColor: AppColors.backColor,
       body: SingleChildScrollView(
@@ -679,6 +677,11 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
                     validator: (value) {
                       return value!.isEmpty ? 'Enter Date' : null;
                     },
+                    onTap: () {
+                      _selectDate(context);
+                    },
+                    readOnly: true,
+
                     controller: _itemDateController,
                     // onSaved: (value) {
                     //   productData['p_name'] = value!;
@@ -731,6 +734,9 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
                   child: TextFormField(
                     validator: (value) {
                       return value!.isEmpty ? 'Location' : null;
+                    },
+                    onTap: () {
+                      userLoc();
                     },
                     controller: _itemLocationController,
                     // onSaved: (value) {
@@ -785,28 +791,9 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
                   ),
                 ),
               ),
-              Container(
-                  width: 325,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Checkbox(
-                          value: isChecked,
-                          onChanged: (bool? newValue) {
-                            setState(() {
-                              isChecked = newValue!;
-                            });
-                          }),
-                      Text(
-                        'I have read the agreement and I accept it',
-                        style: TextStyle(fontSize: 10),
-                      )
-                    ],
-                  )),
               const SizedBox(
                 height: 5,
               ),
-              ElevatedButton(onPressed: () async {}, child: Text('Clear')),
 
               const SizedBox(
                 height: 20,
@@ -1017,9 +1004,29 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
                 ),
               ),
 
+              const SizedBox(
+                height: 20,
+              ),
+              Container(),
+
               //====================================//
               const SizedBox(
                 height: 20,
+              ),
+              Container(
+                width: 325,
+                // child: ElevatedButton(
+                //   child: const Text('Go to review page'),
+                //   style: ElevatedButton.styleFrom(
+                //       backgroundColor: AppColors.blueDarkColor),
+                //   onPressed: () {
+                //     Navigator.push(
+                //       context,
+                //       MaterialPageRoute(
+                //           builder: (context) => const ReviewPage()),
+                //     );
+                //   },
+                // ),
               ),
 
               const SizedBox(
@@ -1075,55 +1082,6 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
               //   ),
               // ),
 
-              Container(
-                  height: 50.0,
-                  width: 345,
-                  child: TextButton(
-                    onPressed: () => showDialog<String>(
-                      context: context,
-                      builder: (BuildContext context) => AlertDialog(
-                        // title: const Text('AlertDialog Title'),
-                        content: const Text('To confirm click confirm button'),
-
-                        actions: <Widget>[
-                          // Container(
-                          //     width: 325,
-                          //     child: Row(
-                          //       mainAxisAlignment: MainAxisAlignment.center,
-                          //       children: [
-                          //         Checkbox(
-                          //             value: _isSelected,
-                          //             onChanged: (bool? newValue) {
-                          //               setState(() {
-                          //                 _isSelected = newValue!;
-                          //               });
-                          //             }),
-                          //         Text(
-                          //           'I have read the agreement and I accept it',
-                          //           style: TextStyle(fontSize: 10),
-                          //         )
-                          //       ],
-                          //     )),
-                          Container(
-                            height: 50.0,
-                            width: 345,
-                            child: ElevatedButton(
-                              child: const Text('Confirm'),
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColors.blueDarkColor),
-                              onPressed: () {
-                                saveItem();
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    child: const Text('Confirm'),
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.blueDarkColor),
-                  )),
-
               const SizedBox(
                 height: 20,
               ),
@@ -1133,7 +1091,6 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
                   child: const Text('Continue'),
                   style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.blueDarkColor),
-                  // onPressed: isChecked ? saveItem() : null,
                   onPressed: () {
                     saveItem();
                   },

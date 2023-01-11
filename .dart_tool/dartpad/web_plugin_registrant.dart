@@ -14,6 +14,7 @@ import 'package:firebase_storage_web/firebase_storage_web.dart';
 import 'package:flutter_facebook_auth_web/flutter_facebook_auth_web.dart';
 import 'package:flutter_secure_storage_web/flutter_secure_storage_web.dart';
 import 'package:fluttertoast/fluttertoast_web.dart';
+import 'package:geolocator_web/geolocator_web.dart';
 import 'package:image_picker_for_web/image_picker_for_web.dart';
 import 'package:image_picker_web/image_picker_web.dart';
 import 'package:printing/printing_web.dart';
@@ -32,6 +33,7 @@ void registerPlugins([final Registrar? pluginRegistrar]) {
   FlutterFacebookAuthPlugin.registerWith(registrar);
   FlutterSecureStorageWeb.registerWith(registrar);
   FluttertoastWebPlugin.registerWith(registrar);
+  GeolocatorPlugin.registerWith(registrar);
   ImagePickerPlugin.registerWith(registrar);
   ImagePickerWeb.registerWith(registrar);
   PrintingPlugin.registerWith(registrar);
