@@ -1,19 +1,16 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:printing/printing.dart';
-import '../model/Agreement.dart';
-import 'printable_data.dart';
-import 'package:http/http.dart' as http;
 // import 'package:printing/printing.dart';
 
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
+
+import '../model/Agreement.dart';
 
 class SaveBtnBuilder extends StatelessWidget {
   SaveBtnBuilder(this.agreement);

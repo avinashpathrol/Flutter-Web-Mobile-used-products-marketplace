@@ -5,7 +5,6 @@ import 'package:marketplace/model/Agreement.dart';
 import 'package:marketplace/model/product_model.dart';
 import 'package:marketplace/screens/TnC.dart';
 import 'package:marketplace/screens/final_screen.dart';
-import 'package:marketplace/screens/forgot_password.dart';
 import 'package:marketplace/screens/home_screen.dart';
 import 'package:marketplace/screens/login_page.dart';
 import 'package:marketplace/screens/login_user_product_screen.dart';

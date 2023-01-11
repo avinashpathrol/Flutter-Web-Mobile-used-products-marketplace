@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:marketplace/screens/already_have_an_account.dart';
-import 'package:marketplace/screens/app_colors.dart';
-import 'package:marketplace/screens/app_styles.dart';
+
 import 'package:marketplace/widgets/create_account_form.dart';
 import 'package:marketplace/widgets/login_form.dart';
 import 'package:marketplace/widgets/responsive_login_page.dart';
+import '../utils/styles/app_styles.dart';
+import '../utils/styles/app_colors.dart';
 
 // import '../widgets/create_account_form.dart';
 // import '../widgets/login_form.dart';

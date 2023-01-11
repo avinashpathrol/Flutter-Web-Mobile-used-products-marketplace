@@ -9,6 +9,9 @@
 // import 'package:marketplace/screens/app_icons.dart';
 // import 'package:marketplace/screens/app_styles.dart';
 // import '../services/create_user.dart';
+import '../utils/styles/app_colors.dart';
+import '../utils/styles/app_icons.dart';
+import '../utils/styles/app_styles.dart';
 
 // class CreateAccountForm extends StatelessWidget {
 //   const CreateAccountForm({
@@ -294,9 +297,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:marketplace/screens/home_screen.dart';
 import '../screens/main_screen.dart';
-import 'package:marketplace/screens/app_colors.dart';
-import 'package:marketplace/screens/app_icons.dart';
-import 'package:marketplace/screens/app_styles.dart';
+
 import '../services/create_user.dart';
 
 class CreateAccountForm extends StatelessWidget {

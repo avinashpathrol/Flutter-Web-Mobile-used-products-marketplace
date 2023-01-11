@@ -7,7 +7,6 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uuid/uuid.dart';
-import 'auth.dart';
 import 'dart:io' as io;
 
 final ImagePicker _picker = ImagePicker();

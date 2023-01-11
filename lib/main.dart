@@ -1,15 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:hexcolor/hexcolor.dart';
-import 'package:marketplace/app_routes/app_route.dart';
-import 'package:marketplace/screens/get_started_page.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:marketplace/screens/home_screen.dart';
-import 'package:marketplace/screens/login_page.dart';
-import 'package:marketplace/screens/main_screen.dart';
-import 'package:marketplace/screens/product_image_picker.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
+import 'package:marketplace/app_routes/app_route.dart';
 
 void configureApp() {
   setUrlStrategy(PathUrlStrategy());

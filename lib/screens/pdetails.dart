@@ -1,27 +1,16 @@
 import 'dart:html';
-import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:marketplace/model/product_model.dart';
-import 'package:marketplace/screens/TnC.dart';
-import 'package:marketplace/screens/app_colors.dart';
-import 'package:marketplace/screens/data_controller.dart';
-import 'package:marketplace/screens/home_screen.dart';
-import 'package:marketplace/screens/login_page.dart';
-import 'package:marketplace/screens/login_user_product_screen.dart';
-import 'package:marketplace/screens/myProfile.dart';
-import 'package:marketplace/screens/privacy.dart';
-import 'package:marketplace/screens/product_image_picker.dart';
-import 'package:marketplace/screens/product_overview.dart';
-import 'package:marketplace/screens/user_agreement.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../app_routes/app_route.dart';
+import '../components/bottom_bar.dart';
+import '../components/topbar.dart';
+import '../utils/styles/app_colors.dart';
 
 class Detail extends StatefulWidget {
   final String pId;
@@ -83,141 +72,9 @@ class _DetailState extends State<Detail> {
           )
         : Scaffold(
             // backgroundColor: Color(0xff252B5C),
-            appBar: AppBar(
-              leading: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Image.asset(
-                  'assets/images/eagree.png',
-                  fit: BoxFit.cover,
-                  height: 100,
-                  width: 100,
-                ),
-              ),
-              backgroundColor: Color.fromARGB(255, 255, 255, 255),
-              actions: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: TextButton(
-                      style: ButtonStyle(
-                        foregroundColor: MaterialStateProperty.all<Color>(
-                            Color.fromARGB(255, 19, 38, 94)),
-                        overlayColor: MaterialStateProperty.resolveWith<Color?>(
-                          (Set<MaterialState> states) {
-                            if (states.contains(MaterialState.hovered))
-                              return Color.fromARGB(255, 19, 38, 94)
-                                  .withOpacity(0.04);
-                            if (states.contains(MaterialState.focused) ||
-                                states.contains(MaterialState.pressed))
-                              return Color.fromARGB(255, 19, 38, 94)
-                                  .withOpacity(0.12);
-                            return null; // Defer to the widget's default.
-                          },
-                        ),
-                      ),
-                      onPressed: () {
-                        GoRouter.of(context).goNamed(RouteCon.home);
-
-                        // Navigator.push(context,
-                        //     MaterialPageRoute(builder: (context) => HomeScreen()));
-                      },
-                      child: Column(children: [
-                        Icon(
-                          Icons.storefront,
-                        ),
-                        TextButton(
-                          child: Text(
-                            "Marketplace",
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 19, 38, 94)),
-                          ),
-                          onPressed: () => {},
-                        ),
-                      ])),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: TextButton(
-                    style: ButtonStyle(
-                      foregroundColor: MaterialStateProperty.all<Color>(
-                          Color.fromARGB(255, 19, 38, 94)),
-                      overlayColor: MaterialStateProperty.resolveWith<Color?>(
-                        (Set<MaterialState> states) {
-                          if (states.contains(MaterialState.hovered))
-                            return Color.fromARGB(255, 19, 38, 94)
-                                .withOpacity(0.04);
-                          if (states.contains(MaterialState.focused) ||
-                              states.contains(MaterialState.pressed))
-                            return Color.fromARGB(255, 19, 38, 94)
-                                .withOpacity(0.12);
-                          return null; // Defer to the widget's default.
-                        },
-                      ),
-                    ),
-                    onPressed: () {
-                      GoRouter.of(context).goNamed(RouteCon.addproduct);
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => ProductImagePicker()));
-                    },
-                    child: Column(children: [
-                      Icon(
-                        Icons.add_business,
-                      ),
-                      TextButton(
-                        child: Text(
-                          "Add Product",
-                          style:
-                              TextStyle(color: Color.fromARGB(255, 19, 38, 94)),
-                        ),
-                        onPressed: () => {},
-                      ),
-                    ]),
-                  ),
-                ),
-                PopupMenuButton(
-                    // icon: Icon(Icons.access_alarm),
-                    iconSize: 30,
-                    color: Color.fromARGB(255, 215, 215, 215),
-                    itemBuilder: (BuildContext context) =>
-                        <PopupMenuEntry<int>>[
-                          const PopupMenuItem<int>(
-                            value: 0,
-                            child: Text('Profile'),
-                          ),
-                          const PopupMenuItem<int>(
-                            value: 1,
-                            child: Text('Log Out'),
-                          ),
-                        ],
-                    onSelected: (value) {
-                      if (value == 0) {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => Profile()));
-                      } else if (value == 1) {
-                        print('inside logout function');
-                        _signOut() async {
-                          await FirebaseAuth.instance.signOut();
-                          FacebookAuth.instance.logOut();
-                        }
-
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const LoginPage()));
-                      } else if (value == 2) {
-                        print('inside logout function');
-                        _signOut() async {
-                          await FirebaseAuth.instance.signOut();
-                        }
-
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const LoginPage()));
-                      }
-                    })
-              ],
+            appBar: PreferredSize(
+              preferredSize: Size.fromHeight(60.0),
+              child: TopBar(),
             ),
             body: SizedBox(
               height: size.height,
@@ -493,61 +350,8 @@ class _DetailState extends State<Detail> {
                     ]),
               ),
             ),
-            bottomNavigationBar: Container(
-              height: size.height / 14,
-              width: size.width,
-              color: Color.fromARGB(255, 19, 38, 94),
-              child: Row(
-                children: <Widget>[
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromARGB(255, 19, 38, 94)),
-                    onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Terms()));
-                    },
-                    child: Text(
-                      'Term and Conditions',
-                      style:
-                          TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Spacer(),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromARGB(255, 19, 38, 94)),
-                    onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Privacy()));
-                    },
-                    child: Text(
-                      'Privacy',
-                      style:
-                          TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Spacer(),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromARGB(255, 19, 38, 94)),
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => UserAgreement()));
-                    },
-                    child: Text(
-                      'User Licence Agreement',
-                      style:
-                          TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ],
-              ),
-            ));
+            bottomNavigationBar: BottomBar(size: size),
+          );
   }
 
   Widget customButtom(Size size, Function function, Color color, String title) {
