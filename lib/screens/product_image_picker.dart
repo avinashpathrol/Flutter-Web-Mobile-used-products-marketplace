@@ -776,6 +776,19 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
                   ),
                 ),
               ),
+              SizedBox(
+                height: size.height / 80,
+              ),
+              ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.blueDarkColor),
+                  onPressed: () {
+                    key.currentState!.clear();
+                  },
+                  child: Text('Clear')),
+              SizedBox(
+                height: size.height / 80,
+              ),
               Container(
                   width: 325,
                   child: Row(
@@ -788,9 +801,6 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
                               isChecked = newValue!;
                             });
                           }),
-                      SizedBox(
-                        height: size.height / 80,
-                      ),
                       Text(
                         'I have read the agreement and I accept it',
                         style: TextStyle(fontSize: 16),
@@ -811,6 +821,9 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
                       fontWeight: FontWeight.w800,
                       color: AppColors.blueDarkColor,
                     )),
+              ),
+              SizedBox(
+                height: size.height / 80,
               ),
               Padding(
                 padding: const EdgeInsets.only(right: 30.0),

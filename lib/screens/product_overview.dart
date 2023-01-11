@@ -519,6 +519,19 @@ class _ProductOverviewState extends State<ProductOverview>
                         ),
                       ),
                     ),
+                    SizedBox(
+                      height: size.height / 80,
+                    ),
+                    ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.blueDarkColor),
+                        onPressed: () {
+                          key.currentState!.clear();
+                        },
+                        child: Text('Clear')),
+                    SizedBox(
+                      height: size.height / 80,
+                    ),
                     Container(
                         width: 325,
                         child: Row(
@@ -531,9 +544,6 @@ class _ProductOverviewState extends State<ProductOverview>
                                     isChecked = newValue!;
                                   });
                                 }),
-                            SizedBox(
-                              height: size.height / 80,
-                            ),
                             Text(
                               'I have read the agreement and I accept it',
                               style: TextStyle(fontSize: 16),
@@ -770,16 +780,16 @@ class _ProductOverviewState extends State<ProductOverview>
                                         borderRadius: BorderRadius.circular(8)),
                                     tabs: [
                                       Tab(
-                                        text: 'Direct Deposit ',
+                                        text: 'Partial Payment ',
                                       ),
                                       Tab(
-                                        text: "E-transfer ",
+                                        text: "Full Payment ",
                                       )
                                     ]),
                               ),
                             ),
                             SizedBox(
-                              height: 300,
+                              height: 150,
                               child: TabBarView(
                                   controller: _tabController,
                                   children: [
@@ -791,13 +801,12 @@ class _ProductOverviewState extends State<ProductOverview>
                                           TextFormField(
                                             validator: (value) {
                                               return value!.isEmpty
-                                                  ? 'Product Description Required'
+                                                  ? 'Put 10% of the product cost as patial payment'
                                                   : null;
                                             },
-
                                             // controller: _itemLocationController,
                                             controller:
-                                                _itemAccountNoController,
+                                                _itemPartialPayController,
 
                                             style: ralewayStyle.copyWith(
                                               fontWeight: FontWeight.w400,
@@ -811,65 +820,8 @@ class _ProductOverviewState extends State<ProductOverview>
                                               contentPadding:
                                                   const EdgeInsets.only(
                                                       top: 5.0, left: 12.0),
-                                              hintText: 'Account Number',
-                                              hintStyle: ralewayStyle.copyWith(
-                                                fontWeight: FontWeight.w400,
-                                                color: AppColors.blueDarkColor
-                                                    .withOpacity(0.5),
-                                                fontSize: 16.0,
-                                              ),
-                                            ),
-                                          ),
-                                          TextFormField(
-                                            validator: (value) {
-                                              return value!.isEmpty
-                                                  ? 'Product Description Required'
-                                                  : null;
-                                            },
-                                            controller:
-                                                _itemInstitutionNoController,
-                                            style: ralewayStyle.copyWith(
-                                              fontWeight: FontWeight.w400,
-                                              color: AppColors.blueDarkColor,
-                                              fontSize: 16.0,
-                                            ),
-                                            decoration: InputDecoration(
-                                              // border: InputBorder.none,
-                                              border: OutlineInputBorder(),
-
-                                              contentPadding:
-                                                  const EdgeInsets.only(
-                                                      top: 5.0, left: 12.0),
-                                              hintText: 'Institution No',
-                                              hintStyle: ralewayStyle.copyWith(
-                                                fontWeight: FontWeight.w400,
-                                                color: AppColors.blueDarkColor
-                                                    .withOpacity(0.5),
-                                                fontSize: 16.0,
-                                              ),
-                                            ),
-                                          ),
-                                          TextFormField(
-                                            validator: (value) {
-                                              return value!.isEmpty
-                                                  ? 'Product Description Required'
-                                                  : null;
-                                            },
-                                            controller:
-                                                _itemTransitNoController,
-                                            style: ralewayStyle.copyWith(
-                                              fontWeight: FontWeight.w400,
-                                              color: AppColors.blueDarkColor,
-                                              fontSize: 16.0,
-                                            ),
-                                            decoration: InputDecoration(
-                                              // border: InputBorder.none,
-                                              border: OutlineInputBorder(),
-
-                                              contentPadding:
-                                                  const EdgeInsets.only(
-                                                      top: 5.0, left: 12.0),
-                                              hintText: 'Transit No',
+                                              hintText:
+                                                  'Put 10% of the product cost as patial payment',
                                               hintStyle: ralewayStyle.copyWith(
                                                 fontWeight: FontWeight.w400,
                                                 color: AppColors.blueDarkColor
@@ -882,12 +834,49 @@ class _ProductOverviewState extends State<ProductOverview>
                                       ),
                                     ),
                                     Container(
+                                      // child: Column(
+                                      //   mainAxisAlignment:
+                                      //       MainAxisAlignment.spaceEvenly,
+                                      //   children: [
+                                      //     Text(
+                                      //         'Email Address : etransfer@backers.ca'),
+                                      //   ],
+                                      // ),
                                       child: Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceEvenly,
                                         children: [
-                                          Text(
-                                              'Email Address : etransfer@backers.ca'),
+                                          TextFormField(
+                                            validator: (value) {
+                                              return value!.isEmpty
+                                                  ? ' 10% as patial payment'
+                                                  : null;
+                                            },
+                                            // controller: _itemLocationController,
+                                            controller:
+                                                _itemPartialPayController,
+
+                                            style: ralewayStyle.copyWith(
+                                              fontWeight: FontWeight.w400,
+                                              color: AppColors.blueDarkColor,
+                                              fontSize: 16.0,
+                                            ),
+                                            decoration: InputDecoration(
+                                              // border: InputBorder.none,
+                                              border: OutlineInputBorder(),
+
+                                              contentPadding:
+                                                  const EdgeInsets.only(
+                                                      top: 5.0, left: 12.0),
+                                              hintText: 'Pay in Full ',
+                                              hintStyle: ralewayStyle.copyWith(
+                                                fontWeight: FontWeight.w400,
+                                                color: AppColors.blueDarkColor
+                                                    .withOpacity(0.5),
+                                                fontSize: 16.0,
+                                              ),
+                                            ),
+                                          ),
                                         ],
                                       ),
                                     )
@@ -921,17 +910,17 @@ class _ProductOverviewState extends State<ProductOverview>
                                     child: const TabBar(
                                       tabs: [
                                         Tab(
-                                          text: 'Partial Payment ',
+                                          text: 'EFT ',
                                         ),
                                         Tab(
-                                          text: 'EFT ',
+                                          text: 'eTransfer ',
                                         ),
                                       ],
                                     ),
                                   ),
                                 ),
                                 SizedBox(
-                                  height: 100,
+                                  height: 300,
                                   child: TabBarView(
                                     children: [
                                       Container(
@@ -942,12 +931,13 @@ class _ProductOverviewState extends State<ProductOverview>
                                             TextFormField(
                                               validator: (value) {
                                                 return value!.isEmpty
-                                                    ? 'Put 10% of the product cost as patial payment'
+                                                    ? 'Product Description Required'
                                                     : null;
                                               },
+
                                               // controller: _itemLocationController,
                                               controller:
-                                                  _itemPartialPayController,
+                                                  _itemAccountNoController,
 
                                               style: ralewayStyle.copyWith(
                                                 fontWeight: FontWeight.w400,
@@ -961,8 +951,67 @@ class _ProductOverviewState extends State<ProductOverview>
                                                 contentPadding:
                                                     const EdgeInsets.only(
                                                         top: 5.0, left: 12.0),
-                                                hintText:
-                                                    'Put 10% of the product cost as patial payment',
+                                                hintText: 'Account Number',
+                                                hintStyle:
+                                                    ralewayStyle.copyWith(
+                                                  fontWeight: FontWeight.w400,
+                                                  color: AppColors.blueDarkColor
+                                                      .withOpacity(0.5),
+                                                  fontSize: 16.0,
+                                                ),
+                                              ),
+                                            ),
+                                            TextFormField(
+                                              validator: (value) {
+                                                return value!.isEmpty
+                                                    ? 'Product Description Required'
+                                                    : null;
+                                              },
+                                              controller:
+                                                  _itemInstitutionNoController,
+                                              style: ralewayStyle.copyWith(
+                                                fontWeight: FontWeight.w400,
+                                                color: AppColors.blueDarkColor,
+                                                fontSize: 16.0,
+                                              ),
+                                              decoration: InputDecoration(
+                                                // border: InputBorder.none,
+                                                border: OutlineInputBorder(),
+
+                                                contentPadding:
+                                                    const EdgeInsets.only(
+                                                        top: 5.0, left: 12.0),
+                                                hintText: 'Institution No',
+                                                hintStyle:
+                                                    ralewayStyle.copyWith(
+                                                  fontWeight: FontWeight.w400,
+                                                  color: AppColors.blueDarkColor
+                                                      .withOpacity(0.5),
+                                                  fontSize: 16.0,
+                                                ),
+                                              ),
+                                            ),
+                                            TextFormField(
+                                              validator: (value) {
+                                                return value!.isEmpty
+                                                    ? 'Product Description Required'
+                                                    : null;
+                                              },
+                                              controller:
+                                                  _itemTransitNoController,
+                                              style: ralewayStyle.copyWith(
+                                                fontWeight: FontWeight.w400,
+                                                color: AppColors.blueDarkColor,
+                                                fontSize: 16.0,
+                                              ),
+                                              decoration: InputDecoration(
+                                                // border: InputBorder.none,
+                                                border: OutlineInputBorder(),
+
+                                                contentPadding:
+                                                    const EdgeInsets.only(
+                                                        top: 5.0, left: 12.0),
+                                                hintText: 'Transit No',
                                                 hintStyle:
                                                     ralewayStyle.copyWith(
                                                   fontWeight: FontWeight.w400,
