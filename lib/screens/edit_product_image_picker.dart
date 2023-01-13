@@ -36,6 +36,7 @@ class EditProduct extends StatefulWidget {
 }
 
 class _EditProductState extends State<EditProduct> {
+  final _formKey = GlobalKey<FormState>();
   bool isChecked = false;
   bool _isSelected = false;
   final Size size = Get.size;
@@ -363,6 +364,8 @@ class _EditProductState extends State<EditProduct> {
       ),
       backgroundColor: AppColors.backColor,
       body: SingleChildScrollView(
+          child: Form(
+        key: _formKey,
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -781,19 +784,7 @@ class _EditProductState extends State<EditProduct> {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(right: 240, top: 20),
-                child: Text(
-                  'Signature',
-                  textAlign: TextAlign.start,
-                  style: ralewayStyle.copyWith(
-                    fontSize: 12.0,
-                    color: AppColors.blueDarkColor,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-              Image.network(signature),
+
               SizedBox(
                 height: size.height / 80,
               ),
@@ -866,46 +857,37 @@ class _EditProductState extends State<EditProduct> {
                   height: 50.0,
                   width: 345,
                   child: TextButton(
-                    onPressed: () => showDialog<String>(
-                      context: context,
-                      builder: (BuildContext context) => AlertDialog(
-                        // title: const Text('AlertDialog Title'),
-                        content: const Text('To update click update button'),
+                    onPressed: () {
+                      // Validate returns true if the form is valid, or false otherwise.
+                      if (_formKey.currentState!.validate()) {
+                        // If the form is valid, display a snackbar. In the real world,
+                        // you'd often call a server or save the information in a database.
+                        showDialog<String>(
+                          context: context,
+                          builder: (BuildContext context) => AlertDialog(
+                            // title: const Text('AlertDialog Title'),
+                            content:
+                                const Text('To confirm click confirm button'),
 
-                        actions: <Widget>[
-                          // Container(
-                          //     width: 325,
-                          //     child: Row(
-                          //       mainAxisAlignment: MainAxisAlignment.center,
-                          //       children: [
-                          //         Checkbox(
-                          //             value: _isSelected,
-                          //             onChanged: (bool? newValue) {
-                          //               setState(() {
-                          //                 _isSelected = newValue!;
-                          //               });
-                          //             }),
-                          //         Text(
-                          //           'I have read the agreement and I accept it',
-                          //           style: TextStyle(fontSize: 10),
-                          //         )
-                          //       ],
-                          //     )),
-                          Container(
-                            height: 50.0,
-                            width: 345,
-                            child: ElevatedButton(
-                              child: const Text('Update'),
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColors.blueDarkColor),
-                              onPressed: () {
-                                saveItem();
-                              },
-                            ),
+                            actions: <Widget>[
+                              //
+                              Container(
+                                height: 50.0,
+                                width: 345,
+                                child: ElevatedButton(
+                                  child: const Text('Confirm'),
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: AppColors.blueDarkColor),
+                                  onPressed: () {
+                                    saveItem();
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ),
+                        );
+                      }
+                    },
                     child: const Text('Update'),
                     style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
@@ -973,7 +955,7 @@ class _EditProductState extends State<EditProduct> {
             ],
           ),
         ),
-      ),
+      )),
     );
   }
 }

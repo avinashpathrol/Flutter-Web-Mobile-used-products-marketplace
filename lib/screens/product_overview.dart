@@ -38,6 +38,7 @@ class ProductOverview extends StatefulWidget {
 
 class _ProductOverviewState extends State<ProductOverview>
     with SingleTickerProviderStateMixin {
+  final _formKey = GlobalKey<FormState>();
   late TabController _tabController;
 
   @override
@@ -284,6 +285,8 @@ class _ProductOverviewState extends State<ProductOverview>
               height: size.height,
               width: size.width,
               child: SingleChildScrollView(
+                  child: Form(
+                key: _formKey,
                 child: Column(
                   // mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -642,9 +645,7 @@ class _ProductOverviewState extends State<ProductOverview>
                           // minLines: 2, // <-- SEE HERE
                           // maxLines: 2,
                           validator: (value) {
-                            return value!.isEmpty
-                                ? 'Product Description Required'
-                                : null;
+                            return value!.isEmpty ? 'Date Required' : null;
                           },
                           controller: _itemDateController,
 
@@ -708,9 +709,7 @@ class _ProductOverviewState extends State<ProductOverview>
                           // minLines: 2, // <-- SEE HERE
                           // maxLines: 2,
                           validator: (value) {
-                            return value!.isEmpty
-                                ? 'Product Description Required'
-                                : null;
+                            return value!.isEmpty ? 'Location Required' : null;
                           },
                           controller: _itemLocationController,
 
@@ -931,7 +930,7 @@ class _ProductOverviewState extends State<ProductOverview>
                                             TextFormField(
                                               validator: (value) {
                                                 return value!.isEmpty
-                                                    ? 'Product Description Required'
+                                                    ? 'Account Number Required'
                                                     : null;
                                               },
 
@@ -964,7 +963,7 @@ class _ProductOverviewState extends State<ProductOverview>
                                             TextFormField(
                                               validator: (value) {
                                                 return value!.isEmpty
-                                                    ? 'Product Description Required'
+                                                    ? 'Institution No Required'
                                                     : null;
                                               },
                                               controller:
@@ -994,7 +993,7 @@ class _ProductOverviewState extends State<ProductOverview>
                                             TextFormField(
                                               validator: (value) {
                                                 return value!.isEmpty
-                                                    ? 'Product Description Required'
+                                                    ? 'Transit No Required'
                                                     : null;
                                               },
                                               controller:
@@ -1073,30 +1072,38 @@ class _ProductOverviewState extends State<ProductOverview>
                         height: 50.0,
                         width: 345,
                         child: TextButton(
-                          onPressed: () => showDialog<String>(
-                            context: context,
-                            builder: (BuildContext context) => AlertDialog(
-                              title: const Text('AlertDialog Title'),
-                              content:
-                                  const Text('To confirm click confirm button'),
-                              actions: <Widget>[
-                                Container(
-                                  height: 50.0,
-                                  width: 345,
-                                  child: ElevatedButton(
-                                    child: const Text('Confirm'),
-                                    style: ElevatedButton.styleFrom(
-                                        foregroundColor: Colors.white,
-                                        backgroundColor:
-                                            AppColors.blueDarkColor),
-                                    onPressed: () {
-                                      UpdateAgreement();
-                                    },
-                                  ),
+                          onPressed: () {
+                            // Validate returns true if the form is valid, or false otherwise.
+                            if (_formKey.currentState!.validate()) {
+                              // If the form is valid, display a snackbar. In the real world,
+                              // you'd often call a server or save the information in a database.
+                              showDialog<String>(
+                                context: context,
+                                builder: (BuildContext context) => AlertDialog(
+                                  // title: const Text('AlertDialog Title'),
+                                  content: const Text(
+                                      'To confirm click confirm button'),
+
+                                  actions: <Widget>[
+                                    //
+                                    Container(
+                                      height: 50.0,
+                                      width: 345,
+                                      child: ElevatedButton(
+                                        child: const Text('Confirm'),
+                                        style: ElevatedButton.styleFrom(
+                                            backgroundColor:
+                                                AppColors.blueDarkColor),
+                                        onPressed: () {
+                                          UpdateAgreement();
+                                        },
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          ),
+                              );
+                            }
+                          },
                           child: const Text('Confirm'),
                           style: ElevatedButton.styleFrom(
                               foregroundColor: Colors.white,
@@ -1126,7 +1133,7 @@ class _ProductOverviewState extends State<ProductOverview>
                     ),
                   ],
                 ),
-              ),
+              )),
             ),
             // bottomNavigationBar: SizedBox(
             //   height: size.height / 14,
