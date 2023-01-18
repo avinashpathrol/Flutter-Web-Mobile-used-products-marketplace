@@ -129,26 +129,27 @@ class TopBar extends StatelessWidget {
                   //     MaterialPageRoute(builder: (context) => Profile()));
                 } else if (value == 1) {
                   print('inside logout function');
-                  _signOut() async {
-                    await FirebaseAuth.instance.signOut();
-                  }
+
+                  await FirebaseAuth.instance.signOut();
+                  // await FacebookAuth.instance.logOut();
+                  GoRouter.of(context).goNamed(RouteCon.login);
 
                   print('leaving logout function');
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const LoginPage()));
-                } else if (value == 2) {
-                  print('inside logout function');
-                  _signOut() async {
-                    await FirebaseAuth.instance.signOut();
-                    FacebookAuth.instance.logOut();
-                  }
+                  // Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //         builder: (context) => const LoginPage()));
+                  // } else if (value == 2) {
+                  //   print('inside logout function');
+                  //   _signOut() async {
+                  //     await FirebaseAuth.instance.signOut();
+                  //     FacebookAuth.instance.logOut();
+                  //   }
 
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const LoginPage()));
+                  // Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //         builder: (context) => const LoginPage()));
                 }
               }),
         )

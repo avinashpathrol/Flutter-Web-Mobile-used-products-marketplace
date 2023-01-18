@@ -16,5 +16,5 @@ Future<void> createUser(String displayName, BuildContext context) async {
     'profession': 'nope',
     'quote': 'liife is beautiful'
   };
-  userCollectionReference.add(user);
+  userCollectionReference.doc(uid).set(user);
 }

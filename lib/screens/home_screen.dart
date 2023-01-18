@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -24,6 +26,7 @@ import 'package:marketplace/screens/product_image_picker.dart';
 import 'package:marketplace/screens/product_overview.dart';
 import 'package:marketplace/screens/user_agreement.dart';
 import 'package:marketplace/services/notification_service.dart';
+import 'package:http/http.dart' as http;
 
 import '../components/bottom_bar.dart';
 
@@ -37,54 +40,111 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   // final DataController controller = Get.put(DataController());
   final Size size = Get.size;
+  Future<void> getPermission() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-  void showFlutterNotification(RemoteMessage message) {
-    RemoteNotification? notification = message.notification;
-    AndroidNotification? android = message.notification?.android;
-    print(notification!.title);
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text("${notification.title}")));
-    // showDialog(
-    //     context: context,
-    //     builder: (_) {
-    //       return AlertDialog(
-    //         title: Text("${notification.title}"),
-    //       );
-    //     });
-    // if (notification != null && android != null && !kIsWeb) {
-    //   flutterLocalNotificationsPlugin.show(
-    //     notification.hashCode,
-    //     notification.title,
-    //     notification.body,
-    //     NotificationDetails(
-    //       android: AndroidNotificationDetails(
-    //         channel.id,
-    //         channel.name,
-    //         channelDescription: channel.description,
-    //         // TODO add a proper drawable resource to android, for now using
-    //         //      one that already exists in example app.
-    //         icon: 'launch_background',
-    //       ),
-    //     ),
-    //   );
-    // }
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
+    print('User granted permission: ${settings.authorizationStatus}');
   }
 
-  // getToken() async {
-  //   String? token = await FirebaseMessaging.instance.getToken();
-  //   print('token ' + token!);
-  // }
+  sendPushMessageToWeb() async {
+    if (_token == null) {
+      print('Unable to send FCM message, no token exists.');
+      return;
+    }
+    try {
+      await http
+          .post(
+            Uri.parse('https://fcm.googleapis.com/fcm/send'),
+            headers: <String, String>{
+              'Content-Type': 'application/json',
+              'Authorization':
+                  'key=AAAAuthZrXA:APA91bE5bHEQ32MzLhD-R9rZDYMTo4Hzhhw3-rhOo5oHdpH46fPFWuNwT-ougm4Bau4JkxcHvsQYzQsNPsZba6lnAPEIt-LC6z09xnQu8MoZAdMfsw03kU6lpia0ke6QFXkyr6l3I6GL'
+            },
+            body: json.encode({
+              'to': _token,
+              'message': {
+                'token': _token,
+              },
+              "notification": {
+                "title": "Push Notification",
+                "body": "Firebase  push notification"
+              }
+            }),
+          )
+          .then((value) => print(value.body));
+      print('FCM request for web sent!');
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void messageListener(BuildContext context) {
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Got a message whilst in the foreground!');
+      print('Message data: ${message.data}');
+
+      if (message.notification != null) {
+        print(
+            'Message also contained a notification: ${message.notification!.body}');
+        showDialog(
+            context: context,
+            builder: ((BuildContext context) {
+              return DynamicDialog(
+                  title: message.notification!.title,
+                  body: message.notification!.body);
+            }));
+      }
+    });
+  }
+
   // late AndroidNotificationChannel channel;
   late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
-  // NotificationService ns = NotificationService();
+  NotificationService ns = NotificationService();
+  String? _token;
+  Stream<String>? _tokenStream;
+  int notificationCount = 0;
+
+  void setToken(String token) {
+    print('FCM TokenToken: $token');
+    setState(() {
+      _token = token;
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    getPermission();
+    FirebaseMessaging.instance
+        .getToken(
+            vapidKey:
+                'BG9k0UFXqotsm408pqNk5D0n4i3YSFWCh3em1gRs48BIEoT_yKZ3FZFsWijINSZiL5krg8jul0eoispoUbm35iY')
+        .then((v) {
+      print("vvvv $v");
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .update({'deviceToken': v});
+      setToken(v!);
+    });
+    _tokenStream = FirebaseMessaging.instance.onTokenRefresh;
+    _tokenStream!.listen(setToken);
+    messageListener(context);
     // getToken();
     // ns.requestPermission();
 
-    // // ns.loadFCM();
+    // ns.loadFCM();
 
     // ns.getToken();
     // ns.listenFCM();
@@ -106,6 +166,11 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Column(
         children: [
+          ElevatedButton(
+              onPressed: () {
+                sendPushMessageToWeb();
+              },
+              child: Text('okkkkkk')),
           Expanded(
             child: StreamBuilder(
               stream: FirebaseFirestore.instance
@@ -217,6 +282,32 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       bottomNavigationBar: BottomBar(size: size),
+    );
+  }
+}
+
+class DynamicDialog extends StatefulWidget {
+  final title;
+  final body;
+  DynamicDialog({this.title, this.body});
+  @override
+  _DynamicDialogState createState() => _DynamicDialogState();
+}
+
+class _DynamicDialogState extends State<DynamicDialog> {
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text(widget.title),
+      actions: <Widget>[
+        OutlinedButton.icon(
+            label: Text('Close'),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(Icons.close))
+      ],
+      content: Text(widget.body),
     );
   }
 }

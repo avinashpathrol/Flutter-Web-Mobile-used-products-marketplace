@@ -128,6 +128,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "expansion_tile_card",
+      "rootUri": "file:///Users/jazib/development/flutter/.pub-cache/hosted/pub.dartlang.org/expansion_tile_card-2.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "facebook_auth_desktop",
       "rootUri": "file:///Users/jazib/development/flutter/.pub-cache/hosted/pub.dartlang.org/facebook_auth_desktop-0.0.8",
       "packageUri": "lib/",
@@ -1028,7 +1034,7 @@
       "languageVersion": "2.18"
     }
   ],
-  "generated": "2023-01-18T15:48:26.771468Z",
+  "generated": "2023-01-18T20:17:35.997459Z",
   "generator": "pub",
   "generatorVersion": "2.18.6"
 }
