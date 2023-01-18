@@ -260,9 +260,10 @@ class _DynamicDialogState extends State<DynamicDialog> {
         OutlinedButton.icon(
             label: Text('Close'),
             onPressed: () {
-              Navigator.pop(context);
+              // Navigator.pop(context);
+              GoRouter.of(context).goNamed(RouteCon.showagreement);
             },
-            icon: Icon(Icons.close))
+            icon: Icon(Icons.navigate_next))
       ],
       content: Text(widget.body),
     );
