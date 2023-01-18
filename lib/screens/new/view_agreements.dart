@@ -109,8 +109,6 @@ class _ViewAgreementdsState extends State<ViewAgreementds> {
             child: StreamBuilder(
               stream: FirebaseFirestore.instance
                   .collection('Agreement')
-                  .where('sellerId',
-                      isEqualTo: FirebaseAuth.instance.currentUser!.uid)
                   .snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {

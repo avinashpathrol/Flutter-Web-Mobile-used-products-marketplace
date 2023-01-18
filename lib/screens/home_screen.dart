@@ -15,17 +15,6 @@ import 'package:go_router/go_router.dart';
 import 'package:marketplace/app_routes/app_route.dart';
 import 'package:marketplace/components/topbar.dart';
 import 'package:marketplace/model/product_model.dart';
-import 'package:marketplace/screens/TnC.dart';
-import 'package:marketplace/screens/data_controller.dart';
-import 'package:marketplace/screens/login_page.dart';
-import 'package:marketplace/screens/login_user_product_screen.dart';
-import 'package:marketplace/screens/new/myProfile.dart';
-import 'package:marketplace/screens/pdetails.dart';
-import 'package:marketplace/screens/privacy.dart';
-import 'package:marketplace/screens/product_image_picker.dart';
-import 'package:marketplace/screens/product_overview.dart';
-import 'package:marketplace/screens/user_agreement.dart';
-import 'package:marketplace/services/notification_service.dart';
 import 'package:http/http.dart' as http;
 
 import '../components/bottom_bar.dart';
@@ -56,38 +45,6 @@ class _HomeScreenState extends State<HomeScreen> {
     print('User granted permission: ${settings.authorizationStatus}');
   }
 
-  sendPushMessageToWeb() async {
-    if (_token == null) {
-      print('Unable to send FCM message, no token exists.');
-      return;
-    }
-    try {
-      await http
-          .post(
-            Uri.parse('https://fcm.googleapis.com/fcm/send'),
-            headers: <String, String>{
-              'Content-Type': 'application/json',
-              'Authorization':
-                  'key=AAAAuthZrXA:APA91bE5bHEQ32MzLhD-R9rZDYMTo4Hzhhw3-rhOo5oHdpH46fPFWuNwT-ougm4Bau4JkxcHvsQYzQsNPsZba6lnAPEIt-LC6z09xnQu8MoZAdMfsw03kU6lpia0ke6QFXkyr6l3I6GL'
-            },
-            body: json.encode({
-              'to': _token,
-              'message': {
-                'token': _token,
-              },
-              "notification": {
-                "title": "Push Notification",
-                "body": "Firebase  push notification"
-              }
-            }),
-          )
-          .then((value) => print(value.body));
-      print('FCM request for web sent!');
-    } catch (e) {
-      print(e);
-    }
-  }
-
   void messageListener(BuildContext context) {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print('Got a message whilst in the foreground!');
@@ -109,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // late AndroidNotificationChannel channel;
   late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
-  NotificationService ns = NotificationService();
+  // NotificationService ns = NotificationService();
   String? _token;
   Stream<String>? _tokenStream;
   int notificationCount = 0;
@@ -168,7 +125,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           ElevatedButton(
               onPressed: () {
-                sendPushMessageToWeb();
+                // sendPushMessageToWeb();
               },
               child: Text('okkkkkk')),
           Expanded(
@@ -309,5 +266,34 @@ class _DynamicDialogState extends State<DynamicDialog> {
       ],
       content: Text(widget.body),
     );
+  }
+}
+
+sendPushMessageToWeb(String token, String title, String body) async {
+  if (token.isEmpty) {
+    print('Unable to send FCM message, no token exists.');
+    return;
+  }
+  try {
+    await http
+        .post(
+          Uri.parse('https://fcm.googleapis.com/fcm/send'),
+          headers: <String, String>{
+            'Content-Type': 'application/json',
+            'Authorization':
+                'key=AAAAuthZrXA:APA91bE5bHEQ32MzLhD-R9rZDYMTo4Hzhhw3-rhOo5oHdpH46fPFWuNwT-ougm4Bau4JkxcHvsQYzQsNPsZba6lnAPEIt-LC6z09xnQu8MoZAdMfsw03kU6lpia0ke6QFXkyr6l3I6GL'
+          },
+          body: json.encode({
+            'to': token,
+            'message': {
+              'token': token,
+            },
+            "notification": {"title": "$title", "body": "$body"}
+          }),
+        )
+        .then((value) => print(value.body));
+    print('FCM request for web sent!');
+  } catch (e) {
+    print(e);
   }
 }

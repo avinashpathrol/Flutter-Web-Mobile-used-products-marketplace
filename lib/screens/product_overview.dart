@@ -15,6 +15,7 @@ import 'package:marketplace/app_routes/app_route.dart';
 import 'package:marketplace/model/Agreement.dart';
 import 'package:marketplace/model/product_model.dart';
 import 'package:marketplace/screens/data_controller.dart';
+import 'package:marketplace/screens/home_screen.dart';
 import 'package:open_street_map_search_and_pick/open_street_map_search_and_pick.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 import 'package:uuid/uuid.dart';
@@ -147,6 +148,16 @@ class _ProductOverviewState extends State<ProductOverview>
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Please wait from buyer side to accep agreement')));
       Navigator.pop(context);
+
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.product.userId)
+          .get()
+          .then((value) {
+        print("pppp ${value['deviceToken']}");
+        sendPushMessageToWeb(
+            value['deviceToken'], 'new agreement recieved', 'detail ');
+      });
       // GoRouter.of(context).pushNamed(RouteCon.finalscreen);
       // Navigator.of(context)
       //     .push(MaterialPageRoute(builder: ((context) => FinalScreen())));
