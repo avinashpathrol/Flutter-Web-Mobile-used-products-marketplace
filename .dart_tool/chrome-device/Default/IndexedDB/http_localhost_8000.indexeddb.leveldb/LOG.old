@@ -1,4 +1,17 @@
-2023/01/11-23:11:44.506 4f18 Reusing MANIFEST C:\Users\jazib\AppData\Local\Temp\flutter_tools.2597e217\flutter_tools_chrome_device.80c3693f\Default\IndexedDB\http_localhost_8000.indexeddb.leveldb/MANIFEST-000001
-2023/01/11-23:11:44.506 4f18 Recovering log #25
-2023/01/11-23:11:44.507 4f18 Reusing old log C:\Users\jazib\AppData\Local\Temp\flutter_tools.2597e217\flutter_tools_chrome_device.80c3693f\Default\IndexedDB\http_localhost_8000.indexeddb.leveldb/000025.log 
-2023/01/11-23:11:44.527 40b0 Manual compaction at level-0 from '\x00\x0f\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x10\x00\x00\x00' @ 0 : 0; will stop at (end)
+2023/01/18-22:29:12.191 b703 Reusing MANIFEST /private/var/folders/y5/cnw4cj7d4yb3w_93dk5wmkt80000gn/T/flutter_tools.4d3XZY/flutter_tools_chrome_device.ejpoOQ/Default/IndexedDB/http_localhost_8000.indexeddb.leveldb/MANIFEST-000001
+2023/01/18-22:29:12.192 b703 Recovering log #188
+2023/01/18-22:29:12.192 b703 Reusing old log /private/var/folders/y5/cnw4cj7d4yb3w_93dk5wmkt80000gn/T/flutter_tools.4d3XZY/flutter_tools_chrome_device.ejpoOQ/Default/IndexedDB/http_localhost_8000.indexeddb.leveldb/000188.log 
+2023/01/18-22:29:12.192 b703 Delete type=2 #88
+2023/01/18-22:29:12.192 b703 Delete type=0 #89
+2023/01/18-22:29:12.192 b703 Delete type=2 #5
+2023/01/18-22:29:12.192 b703 Delete type=2 #154
+2023/01/18-22:29:12.192 b703 Delete type=0 #51
+2023/01/18-22:29:12.192 b703 Delete type=2 #182
+2023/01/18-22:29:12.192 b703 Delete type=2 #186
+2023/01/18-22:29:12.192 b703 Delete type=2 #178
+2023/01/18-22:29:12.192 b703 Delete type=2 #150
+2023/01/18-22:29:12.192 b703 Delete type=0 #152
+2023/01/18-22:29:12.192 b703 Delete type=2 #50
+2023/01/18-22:29:12.192 b703 Delete type=0 #180
+2023/01/18-22:29:12.192 b703 Delete type=2 #91
+2023/01/18-22:29:12.192 b703 Delete type=2 #53

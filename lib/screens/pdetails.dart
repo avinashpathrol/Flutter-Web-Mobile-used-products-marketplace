@@ -45,7 +45,7 @@ class _DetailState extends State<Detail> {
           setState(() {
             product = Product(
               productId: result['productId'],
-              signature: result['signature'],
+              // signature: result['signature'],
               seller_name: result['seller_name'],
               userId: result['user_Id'],
               name: result['name'],

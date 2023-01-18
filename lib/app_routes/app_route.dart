@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
 import 'package:marketplace/error_screen.dart';
+import 'package:marketplace/main.dart';
 import 'package:marketplace/model/Agreement.dart';
 import 'package:marketplace/model/product_model.dart';
 import 'package:marketplace/screens/TnC.dart';
@@ -9,7 +10,9 @@ import 'package:marketplace/screens/final_screen.dart';
 import 'package:marketplace/screens/home_screen.dart';
 import 'package:marketplace/screens/login_page.dart';
 import 'package:marketplace/screens/login_user_product_screen.dart';
-import 'package:marketplace/screens/myProfile.dart';
+import 'package:marketplace/screens/new/myProfile.dart';
+import 'package:marketplace/screens/new/signed_agreements.dart';
+import 'package:marketplace/screens/new/view_agreements.dart';
 import 'package:marketplace/screens/pdetails.dart';
 import 'package:marketplace/screens/privacy.dart';
 import 'package:marketplace/screens/product_image_picker.dart';
@@ -27,12 +30,18 @@ class RouteCon {
   static const productoverview = 'productoverview';
   static const finalscreen = 'finalscreen';
   static const showagreement = 'showagreement';
+  static const makepdf = 'makepdf';
+
+  // static const showagreement = 'showagreement';
+
   static const yourProducts = " yourProducts";
   static const terms = 'terms';
   static const privacy = 'privacy';
   static const useragr = "useragr";
   static const signoff = "signoff";
   static const editproduct = "editproduct";
+  static const dummynotification = "dummynotification";
+  static const signedagreements = "signedagreements";
 }
 
 class AppRoutes {
@@ -46,7 +55,7 @@ class AppRoutes {
           return HomeScreen();
         },
         redirect: (context, state) async {
-          User? firebaseUser = FirebaseAuth.instance.currentUser;
+          User? firebaseUser = await FirebaseAuth.instance.currentUser;
           if (firebaseUser != null) {
             return '/';
           } else {
@@ -105,7 +114,23 @@ class AppRoutes {
       ),
       GoRoute(
         name: RouteCon.showagreement,
-        path: "/showagreement",
+        path: "/pendingagreements",
+        builder: (context, state) {
+          // Agreement agreement = state.extra as Agreement;
+          return ViewAgreementds();
+        },
+      ),
+      GoRoute(
+        name: RouteCon.signedagreements,
+        path: "/signedagreements",
+        builder: (context, state) {
+          // Agreement agreement = state.extra as Agreement;
+          return SignedAgreementds();
+        },
+      ),
+      GoRoute(
+        name: RouteCon.makepdf,
+        path: "/makepdfpage",
         builder: (context, state) {
           Agreement agreement = state.extra as Agreement;
           return ShowAgreement(agreement);

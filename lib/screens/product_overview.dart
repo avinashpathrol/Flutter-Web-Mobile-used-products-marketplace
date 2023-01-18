@@ -114,7 +114,7 @@ class _ProductOverviewState extends State<ProductOverview>
 
     final User? user = auth.currentUser;
     final uid = user?.uid;
-    var res = FirebaseFirestore.instance.collection('Agreement').add({
+    FirebaseFirestore.instance.collection('Agreement').add({
       'name': widget.product.name,
       'seller_name': widget.product.seller_name,
       'price': widget.product.price,
@@ -123,7 +123,8 @@ class _ProductOverviewState extends State<ProductOverview>
       'location': widget.product.location,
       'signature': widget.product.signature,
       'img': widget.product.img,
-      'user_Id': uid,
+      'buyer_id': uid,
+      'sellerId': widget.product.userId,
       'client_name': _itemNameController.text,
       'client_date': _itemDateController.text,
       'client_location': _itemLocationController.text,
@@ -132,7 +133,8 @@ class _ProductOverviewState extends State<ProductOverview>
       'institution_No': _itemInstitutionNoController.text,
       'transit_No': _itemTransitNoController.text,
       'partial_pay': _itemPartialPayController.text,
-      'productId': widget.product.productId
+      'productId': widget.product.productId,
+      'agreementStatus': false,
     }).then((value) {
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('Agreement Uploaded')));
@@ -140,7 +142,10 @@ class _ProductOverviewState extends State<ProductOverview>
       setState(() {
         isLoading = false;
       });
-      GoRouter.of(context).pushNamed(RouteCon.finalscreen);
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Please wait from buyer side to accep agreement')));
+      Navigator.pop(context);
+      // GoRouter.of(context).pushNamed(RouteCon.finalscreen);
       // Navigator.of(context)
       //     .push(MaterialPageRoute(builder: ((context) => FinalScreen())));
     });
@@ -1076,9 +1081,9 @@ class _ProductOverviewState extends State<ProductOverview>
                           onPressed: () => showDialog<String>(
                             context: context,
                             builder: (BuildContext context) => AlertDialog(
-                              title: const Text('AlertDialog Title'),
-                              content:
-                                  const Text('To confirm click confirm button'),
+                              title: const Text('Confirm Agreement'),
+                              content: const Text(
+                                  'To confirm, click confirm button'),
                               actions: <Widget>[
                                 Container(
                                   height: 50.0,

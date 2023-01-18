@@ -177,7 +177,7 @@ import 'package:marketplace/screens/TnC.dart';
 import 'package:marketplace/screens/data_controller.dart';
 import 'package:marketplace/screens/login_page.dart';
 import 'package:marketplace/screens/login_user_product_screen.dart';
-import 'package:marketplace/screens/myProfile.dart';
+import 'package:marketplace/screens/new/myProfile.dart';
 import 'package:marketplace/screens/pdetails.dart';
 import 'package:marketplace/screens/privacy.dart';
 import 'package:marketplace/screens/product_image_picker.dart';

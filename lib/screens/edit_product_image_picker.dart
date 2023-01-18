@@ -19,7 +19,7 @@ import 'package:marketplace/components/topbar.dart';
 import 'package:marketplace/model/product_model.dart';
 import 'package:marketplace/screens/home_screen.dart';
 import 'package:marketplace/screens/login_user_product_screen.dart';
-import 'package:marketplace/screens/myProfile.dart';
+import 'package:marketplace/screens/new/myProfile.dart';
 import 'package:open_street_map_search_and_pick/open_street_map_search_and_pick.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 import 'package:uuid/uuid.dart';

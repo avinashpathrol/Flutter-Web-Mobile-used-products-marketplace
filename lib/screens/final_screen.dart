@@ -1,19 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:marketplace/app_routes/app_route.dart';
 import 'package:marketplace/model/Agreement.dart';
-import 'package:marketplace/screens/TnC.dart';
 import 'package:marketplace/screens/data_controller.dart';
-import 'package:marketplace/screens/login_page.dart';
-import 'package:marketplace/screens/myProfile.dart';
-import 'package:marketplace/screens/privacy.dart';
-import 'package:marketplace/screens/user_agreement.dart';
+import 'package:marketplace/screens/new/myProfile.dart';
 
 import '../components/bottom_bar.dart';
 import '../components/topbar.dart';

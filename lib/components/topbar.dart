@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../app_routes/app_route.dart';
 import '../screens/login_page.dart';
-import '../screens/myProfile.dart';
+import '../screens/new/myProfile.dart';
 
 class TopBar extends StatelessWidget {
   const TopBar({

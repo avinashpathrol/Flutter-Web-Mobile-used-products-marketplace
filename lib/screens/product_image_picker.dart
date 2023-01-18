@@ -15,9 +15,10 @@ import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:marketplace/app_routes/app_route.dart';
 import 'package:marketplace/components/topbar.dart';
 import 'package:marketplace/screens/home_screen.dart';
-import 'package:marketplace/screens/myProfile.dart';
+import 'package:marketplace/screens/new/myProfile.dart';
 import 'package:open_street_map_search_and_pick/open_street_map_search_and_pick.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 import 'package:uuid/uuid.dart';
@@ -57,10 +58,10 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
   TextEditingController _itemInstitutionNoController = TextEditingController();
   TextEditingController _itemTransitNoController = TextEditingController();
 
-  bool isItemSaved = false;
+  // bool isItemSaved = false;
 
   bool isLoading = false;
-  GlobalKey<SfSignaturePadState> key = GlobalKey();
+  // GlobalKey<SfSignaturePadState> key = GlobalKey();
   double min = 4.0;
   // Uuid? v;
   var uuid = Uuid();
@@ -72,8 +73,8 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
     return now.microsecondsSinceEpoch.toString();
   }
 
-  String signUrl = '';
-  String signature = '';
+  // String signUrl = '';
+  // String signature = '';
   final FirebaseAuth auth = FirebaseAuth.instance;
 
   @override
@@ -117,7 +118,7 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
             ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
-                primary: Colors.red, // button text color
+                backgroundColor: Colors.red, // button text color
               ),
             ),
           ),
@@ -209,44 +210,44 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
             ));
   }
 
-  Future<UploadTask?> uploadFile1(Uint8List? file) async {
+  Future<UploadTask?> uploadFile1() async {
     // idGenerator();
-    if (file == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('No file was selected'),
-        ),
-      );
+    // if (file == null) {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     const SnackBar(
+    //       content: Text('No file was selected'),
+    //     ),
+    //   );
 
-      return null;
-    }
+    //   return null;
+    // }
 
-    UploadTask uploadTask;
+    // UploadTask uploadTask;
 
-    // Create a Reference to the file
-    Reference ref = FirebaseStorage.instance
-        .ref()
-        .child('signature')
-        .child('/${idGenerator()}.jpg');
+    // // Create a Reference to the file
+    // Reference ref = FirebaseStorage.instance
+    //     .ref()
+    //     .child('signature')
+    //     .child('/${idGenerator()}.jpg');
 
-    final metadata = SettableMetadata(
-      contentType: 'image/jpg',
-      // customMetadata: {'picked-file-path': file},
-    );
+    // final metadata = SettableMetadata(
+    //   contentType: 'image/jpg',
+    //   // customMetadata: {'picked-file-path': file},
+    // );
 
-    uploadTask = ref.putData(file, metadata);
-    await uploadTask.whenComplete(() => null);
-    signature = await ref.getDownloadURL();
+    // uploadTask = ref.putData(file, metadata);
+    // await uploadTask.whenComplete(() => null);
+    // // signature = await ref.getDownloadURL();
 
-    setState(() {
-      isLoading = true;
-      isItemSaved = true;
-    });
+    // setState(() {
+    //   isLoading = true;
+    //   // isItemSaved = true;
+    // });
     String imageUrl = await _uploadFile();
 
     final User? user = auth.currentUser;
     final uid = user?.uid;
-    var id = await FirebaseFirestore.instance.collection('productData').doc();
+    // var id = await FirebaseFirestore.instance.collection('productData').doc();
     await FirebaseFirestore.instance.collection('productData').add({
       'name': _itemNameController.text,
       'seller_name': _itemSellerNameController.text,
@@ -254,33 +255,38 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
       'description': _itemDescriptionController.text,
       'date': _itemDateController.text,
       'location': _itemLocationController.text,
-      'signature': signature,
+      // 'signature': signature,
       'img': imageUrl,
       'user_Id': uid,
       'productId': uuid.v4(),
-      'signUrl': signUrl,
+      // 'signUrl': signUrl,
       'account_no': _itemAccountNoController.text,
       'institution_no': _itemInstitutionNoController.text,
       'transit_no': _itemTransitNoController.text
     }).then((value) {
-      CircularProgressIndicator();
+      // CircularProgressIndicator();
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('Product Uploaded')));
-
+      GoRouter.of(context).goNamed(RouteCon.home);
       // sendPushMessage();
-      setState(() {
-        isItemSaved = false;
-      });
+      // setState(() {
+      //   isItemSaved = false;
+      // });
 
       // Navigator.of(context).push(
       //     MaterialPageRoute(builder: ((context) => LoginUserProductScreen())));
     });
-
-    return Future.value(uploadTask);
+    // setState(() {
+    //   isLoading = false;
+    // });
+    return Future.value();
   }
 
   Future<String> _uploadFile() async {
     String imageUrl = '';
+    // setState(() {
+    //   isLoading = true;
+    // });
     try {
       firabase_storage.UploadTask uploadTask;
 
@@ -300,33 +306,40 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
 
       await uploadTask.whenComplete(() => null);
       imageUrl = await ref.getDownloadURL();
+      setState(() {
+        isLoading = false;
+        // isItemSaved = false;
+      });
     } catch (e) {
       print(e);
     }
+    // setState(() {
+    //   isLoading = false;
+    // });
     return imageUrl;
   }
 
   saveItem() async {
     setState(() {
       isLoading = true;
-      isItemSaved = true;
+      // isItemSaved = true;
     });
-    String imageUrl = await _uploadFile();
+    // String imageUrl = await _uploadFile();
 
     // await _uploadMultipleFiles(_itemNameController.text);
     // print('Uploaded Image URL ' + imageUrls.length.toString());
 
     ///////////
-    ui.Image image = await key.currentState!.toImage();
-    final bytedata = await image.toByteData(format: ui.ImageByteFormat.png);
-    final Uint8List imageBytes = bytedata!.buffer
-        .asUint8List(bytedata.offsetInBytes, bytedata.lengthInBytes);
-    String e = base64.encode(imageBytes);
-    Uint8List decode = base64.decode(e);
-    setState(() {
-      img = decode;
-    });
-    uploadFile1(img);
+    // ui.Image image = await key.currentState!.toImage();
+    // final bytedata = await image.toByteData(format: ui.ImageByteFormat.png);
+    // final Uint8List imageBytes = bytedata!.buffer
+    //     .asUint8List(bytedata.offsetInBytes, bytedata.lengthInBytes);
+    // String e = base64.encode(imageBytes);
+    // Uint8List decode = base64.decode(e);
+    // setState(() {
+    //   img = decode;
+    // });
+    await uploadFile1();
     setState(() {
       isLoading = false;
     });
@@ -340,829 +353,817 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
         child: TopBar(),
       ),
       backgroundColor: AppColors.backColor,
-      body: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.02,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(9.0),
-                child: Container(
-                    height: 300,
-                    width: 400,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(
-                        15,
-                      ),
+      body: isLoading == true
+          ? Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.02,
                     ),
-                    child: selctFile.isEmpty
-                        ? Image.network(
-                            defaultImageUrl,
-                            fit: BoxFit.cover,
-                          )
-
-                        //==========================================//
-                        : Image.memory(selectedImageInBytes)),
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.02,
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.05,
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    //_showPicker(context);
-                    _selectFile(true);
-                  },
-                  icon: const Icon(
-                    Icons.camera,
-                  ),
-                  label: const Text(
-                    'Pick Image',
-                    style: TextStyle(),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.02,
-              ),
-              if (isItemSaved)
-                Container(
-                  child: CircularProgressIndicator(
-                    color: Colors.green,
-                  ),
-                ),
-
-              Padding(
-                padding: const EdgeInsets.only(right: 220, top: 20),
-                child: Text(
-                  'Product Name',
-                  textAlign: TextAlign.start,
-                  style: ralewayStyle.copyWith(
-                    fontSize: 12.0,
-                    color: AppColors.blueDarkColor,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-
-              Padding(
-                padding: const EdgeInsets.only(top: 10.0),
-                child: Container(
-                  height: 50.0,
-                  width: 325,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16.0),
-                    color: AppColors.whiteColor,
-                  ),
-                  child: TextFormField(
-                    validator: (value) {
-                      return value!.isEmpty ? 'Product Name' : null;
-                    },
-                    controller: _itemNameController,
-                    style: ralewayStyle.copyWith(
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.blueDarkColor,
-                      fontSize: 12.0,
-                    ),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      contentPadding:
-                          const EdgeInsets.only(top: 5.0, left: 12.0),
-                      hintText: 'Ex: CAR ',
-                      hintStyle: ralewayStyle.copyWith(
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.blueDarkColor.withOpacity(0.5),
-                        fontSize: 12.0,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-
-              //==============================================//
-              Padding(
-                padding: const EdgeInsets.only(right: 240, top: 20),
-                child: Text(
-                  'Item Price',
-                  textAlign: TextAlign.start,
-                  style: ralewayStyle.copyWith(
-                    fontSize: 12.0,
-                    color: AppColors.blueDarkColor,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10.0),
-                child: Container(
-                  height: 50.0,
-                  width: 325,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16.0),
-                    color: AppColors.whiteColor,
-                  ),
-                  child: TextFormField(
-                    validator: (value) {
-                      return value!.isEmpty ? 'Item Price' : null;
-                    },
-                    controller: _itemPriceController,
-                    // onSaved: (value) {
-                    //   productData['p_name'] = value!;
-                    // },
-                    // controller: _emailTextController,
-                    style: ralewayStyle.copyWith(
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.blueDarkColor,
-                      fontSize: 12.0,
-                    ),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-
-                      // prefixIcon: IconButton(
-                      //     onPressed: () {},
-                      //     icon: Image.asset(AppIcons.emailIcon)),
-                      contentPadding:
-                          const EdgeInsets.only(top: 5.0, left: 12.0),
-                      hintText: '\$200',
-                      hintStyle: ralewayStyle.copyWith(
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.blueDarkColor.withOpacity(0.5),
-                        fontSize: 12.0,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-
-              //==============================================//
-              Padding(
-                padding: const EdgeInsets.only(right: 240, top: 20),
-                child: Text(
-                  'Description',
-                  textAlign: TextAlign.start,
-                  style: ralewayStyle.copyWith(
-                    fontSize: 12.0,
-                    color: AppColors.blueDarkColor,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10.0),
-                child: Container(
-                  height: 90.0,
-                  width: 325,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16.0),
-                    color: AppColors.whiteColor,
-                  ),
-                  child: TextFormField(
-                    keyboardType: TextInputType.multiline,
-                    minLines: 4, // <-- SEE HERE
-                    maxLines: 10,
-                    validator: (value) {
-                      return value!.isEmpty
-                          ? 'Product Description Required'
-                          : null;
-                    },
-                    controller: _itemDescriptionController,
-                    // onSaved: (value) {
-                    //   productData['Description'] = value!;
-                    // },
-                    // controller: _emailTextController,
-                    style: ralewayStyle.copyWith(
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.blueDarkColor,
-                      fontSize: 12.0,
-                    ),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-
-                      // prefixIcon: IconButton(
-                      //     onPressed: () {},
-                      //     icon: Image.asset(AppIcons.emailIcon)),
-                      contentPadding:
-                          const EdgeInsets.only(top: 5.0, left: 12.0),
-                      hintText: 'Description',
-                      hintStyle: ralewayStyle.copyWith(
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.blueDarkColor.withOpacity(0.5),
-                        fontSize: 12.0,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 30.0),
-                child: Text('Terms',
-                    style: ralewayStyle.copyWith(
-                      fontWeight: FontWeight.w800,
-                      color: AppColors.blueDarkColor,
-                    )),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              SizedBox(
-                width: 300,
-                child: Text(
-                  "By Listing you acknowledge the loperisum loperisum loperisum loperisum",
-                  style: TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-
-              //==============================================//
-
-              Padding(
-                padding: const EdgeInsets.only(right: 240, top: 20),
-                child: Text(
-                  'Enter Name',
-                  textAlign: TextAlign.start,
-                  style: ralewayStyle.copyWith(
-                    fontSize: 12.0,
-                    color: AppColors.blueDarkColor,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10.0),
-                child: Container(
-                  height: 50.0,
-                  width: 325,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16.0),
-                    color: AppColors.whiteColor,
-                  ),
-                  child: TextFormField(
-                    validator: (value) {
-                      return value!.isEmpty ? 'Enter Name' : null;
-                    },
-                    controller: _itemSellerNameController,
-                    // onSaved: (value) {
-                    //   productData['p_name'] = value!;
-                    // },
-                    // controller: _emailTextController,
-                    style: ralewayStyle.copyWith(
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.blueDarkColor,
-                      fontSize: 12.0,
-                    ),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-
-                      // prefixIcon: IconButton(
-                      //     onPressed: () {},
-                      //     icon: Image.asset(AppIcons.emailIcon)),
-                      contentPadding:
-                          const EdgeInsets.only(top: 5.0, left: 12.0),
-                      hintText: 'Enter Name',
-                      hintStyle: ralewayStyle.copyWith(
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.blueDarkColor.withOpacity(0.5),
-                        fontSize: 12.0,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 240, top: 20),
-                child: Text(
-                  'Enter Date',
-                  textAlign: TextAlign.start,
-                  style: ralewayStyle.copyWith(
-                    fontSize: 12.0,
-                    color: AppColors.blueDarkColor,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10.0),
-                child: Container(
-                  height: 50.0,
-                  width: 325,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16.0),
-                    color: AppColors.whiteColor,
-                  ),
-                  child: TextFormField(
-                    validator: (value) {
-                      return value!.isEmpty ? 'Enter Date' : null;
-                    },
-                    onTap: () {
-                      _selectDate(context);
-                    },
-                    readOnly: true,
-
-                    controller: _itemDateController,
-                    // onSaved: (value) {
-                    //   productData['p_name'] = value!;
-                    // },
-                    // controller: _emailTextController,
-                    style: ralewayStyle.copyWith(
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.blueDarkColor,
-                      fontSize: 12.0,
-                    ),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-
-                      // prefixIcon: IconButton(
-                      //     onPressed: () {},
-                      //     icon: Image.asset(AppIcons.emailIcon)),
-                      contentPadding:
-                          const EdgeInsets.only(top: 5.0, left: 12.0),
-                      hintText: 'Enter date',
-                      hintStyle: ralewayStyle.copyWith(
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.blueDarkColor.withOpacity(0.5),
-                        fontSize: 12.0,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 240, top: 20),
-                child: Text(
-                  'Your Location',
-                  textAlign: TextAlign.start,
-                  style: ralewayStyle.copyWith(
-                    fontSize: 12.0,
-                    color: AppColors.blueDarkColor,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10.0),
-                child: Container(
-                  height: 50.0,
-                  width: 325,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16.0),
-                    color: AppColors.whiteColor,
-                  ),
-                  child: TextFormField(
-                    validator: (value) {
-                      return value!.isEmpty ? 'Location' : null;
-                    },
-                    onTap: () {
-                      userLoc();
-                    },
-                    controller: _itemLocationController,
-                    // onSaved: (value) {
-                    //   productData['p_name'] = value!;
-                    // },
-                    // controller: _emailTextController,
-                    style: ralewayStyle.copyWith(
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.blueDarkColor,
-                      fontSize: 12.0,
-                    ),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-
-                      // prefixIcon: IconButton(
-                      //     onPressed: () {},
-                      //     icon: Image.asset(AppIcons.emailIcon)),
-                      contentPadding:
-                          const EdgeInsets.only(top: 5.0, left: 12.0),
-                      hintText: 'Enter Location',
-                      hintStyle: ralewayStyle.copyWith(
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.blueDarkColor.withOpacity(0.5),
-                        fontSize: 12.0,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 240, top: 20),
-                child: Text(
-                  'Signature',
-                  textAlign: TextAlign.start,
-                  style: ralewayStyle.copyWith(
-                    fontSize: 12.0,
-                    color: AppColors.blueDarkColor,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 20),
-                child: Container(
-                  width: 350,
-                  child: SfSignaturePad(
-                    key: key,
-                    backgroundColor: Colors.grey.shade400,
-                    strokeColor: c,
-                    minimumStrokeWidth: 10,
-                    maximumStrokeWidth: min,
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: size.height / 80,
-              ),
-              ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.blueDarkColor),
-                  onPressed: () {
-                    key.currentState!.clear();
-                  },
-                  child: Text('Clear')),
-              SizedBox(
-                height: size.height / 80,
-              ),
-              Container(
-                  width: 325,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Checkbox(
-                          value: isChecked,
-                          onChanged: (bool? newValue) {
-                            setState(() {
-                              isChecked = newValue!;
-                            });
-                          }),
-                      Text(
-                        'I have read the agreement and I accept it',
-                        style: TextStyle(fontSize: 16),
-                      )
-                    ],
-                  )),
-              const SizedBox(
-                height: 5,
-              ),
-
-              const SizedBox(
-                height: 20,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 30.0),
-                child: Text('Payment Details',
-                    style: ralewayStyle.copyWith(
-                      fontWeight: FontWeight.w800,
-                      color: AppColors.blueDarkColor,
-                    )),
-              ),
-              SizedBox(
-                height: size.height / 80,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 30.0),
-                child: Text('Enter bank details where you want to get paid',
-                    style: ralewayStyle.copyWith(
-                      fontWeight: FontWeight.w800,
-                      color: AppColors.blueDarkColor,
-                    )),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 240, top: 20),
-                child: Text(
-                  'Account No',
-                  textAlign: TextAlign.start,
-                  style: ralewayStyle.copyWith(
-                    fontSize: 12.0,
-                    color: AppColors.blueDarkColor,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10.0),
-                child: Container(
-                  height: 50.0,
-                  width: 325,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16.0),
-                    color: AppColors.whiteColor,
-                  ),
-                  child: TextFormField(
-                    validator: (value) {
-                      return value!.isEmpty ? 'Account_no' : null;
-                    },
-                    controller: _itemAccountNoController,
-                    // onSaved: (value) {
-                    //   productData['p_name'] = value!;
-                    // },
-                    // controller: _emailTextController,
-                    style: ralewayStyle.copyWith(
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.blueDarkColor,
-                      fontSize: 12.0,
-                    ),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-
-                      // prefixIcon: IconButton(
-                      //     onPressed: () {},
-                      //     icon: Image.asset(AppIcons.emailIcon)),
-                      contentPadding:
-                          const EdgeInsets.only(top: 5.0, left: 12.0),
-                      hintText: 'Enter Account No',
-                      hintStyle: ralewayStyle.copyWith(
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.blueDarkColor.withOpacity(0.5),
-                        fontSize: 12.0,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 240, top: 20),
-                child: Text(
-                  'Institution No',
-                  textAlign: TextAlign.start,
-                  style: ralewayStyle.copyWith(
-                    fontSize: 12.0,
-                    color: AppColors.blueDarkColor,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10.0),
-                child: Container(
-                  height: 50.0,
-                  width: 325,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16.0),
-                    color: AppColors.whiteColor,
-                  ),
-                  child: TextFormField(
-                    validator: (value) {
-                      return value!.isEmpty ? 'Institution' : null;
-                    },
-                    controller: _itemInstitutionNoController,
-                    // onSaved: (value) {
-                    //   productData['p_name'] = value!;
-                    // },
-                    // controller: _emailTextController,
-                    style: ralewayStyle.copyWith(
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.blueDarkColor,
-                      fontSize: 12.0,
-                    ),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-
-                      // prefixIcon: IconButton(
-                      //     onPressed: () {},
-                      //     icon: Image.asset(AppIcons.emailIcon)),
-                      contentPadding:
-                          const EdgeInsets.only(top: 5.0, left: 12.0),
-                      hintText: 'Enter Transit No',
-                      hintStyle: ralewayStyle.copyWith(
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.blueDarkColor.withOpacity(0.5),
-                        fontSize: 12.0,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 240, top: 20),
-                child: Text(
-                  'Transit No',
-                  textAlign: TextAlign.start,
-                  style: ralewayStyle.copyWith(
-                    fontSize: 12.0,
-                    color: AppColors.blueDarkColor,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10.0),
-                child: Container(
-                  height: 50.0,
-                  width: 325,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16.0),
-                    color: AppColors.whiteColor,
-                  ),
-                  child: TextFormField(
-                    validator: (value) {
-                      return value!.isEmpty ? 'Institution' : null;
-                    },
-                    controller: _itemTransitNoController,
-                    // onSaved: (value) {
-                    //   productData['p_name'] = value!;
-                    // },
-                    // controller: _emailTextController,
-                    style: ralewayStyle.copyWith(
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.blueDarkColor,
-                      fontSize: 12.0,
-                    ),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-
-                      // prefixIcon: IconButton(
-                      //     onPressed: () {},
-                      //     icon: Image.asset(AppIcons.emailIcon)),
-                      contentPadding:
-                          const EdgeInsets.only(top: 5.0, left: 12.0),
-                      hintText: 'Enter Transit  No',
-                      hintStyle: ralewayStyle.copyWith(
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.blueDarkColor.withOpacity(0.5),
-                        fontSize: 12.0,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 5,
-              ),
-
-              const SizedBox(
-                height: 20,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 30.0),
-                child: Text('Authorization / Fees',
-                    style: ralewayStyle.copyWith(
-                      fontWeight: FontWeight.w800,
-                      color: AppColors.blueDarkColor,
-                    )),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              SizedBox(
-                width: 300,
-                child: Text(
-                  "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
-                  style: TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-
-              const SizedBox(
-                height: 20,
-              ),
-              Container(),
-
-              //====================================//
-              const SizedBox(
-                height: 20,
-              ),
-              Container(
-                width: 325,
-                // child: ElevatedButton(
-                //   child: const Text('Go to review page'),
-                //   style: ElevatedButton.styleFrom(
-                //       backgroundColor: AppColors.blueDarkColor),
-                //   onPressed: () {
-                //     Navigator.push(
-                //       context,
-                //       MaterialPageRoute(
-                //           builder: (context) => const ReviewPage()),
-                //     );
-                //   },
-                // ),
-              ),
-
-              const SizedBox(
-                height: 20,
-              ),
-              Container(
-                  height: 50.0,
-                  width: 345,
-                  child: TextButton(
-                    onPressed: () => showDialog<String>(
-                      context: context,
-                      builder: (BuildContext context) => AlertDialog(
-                        // title: const Text('AlertDialog Title'),
-                        content: const Text('To confirm click confirm button'),
-
-                        actions: <Widget>[
-                          // Container(
-                          //     width: 325,
-                          //     child: Row(
-                          //       mainAxisAlignment: MainAxisAlignment.center,
-                          //       children: [
-                          //         Checkbox(
-                          //             value: _isSelected,
-                          //             onChanged: (bool? newValue) {
-                          //               setState(() {
-                          //                 _isSelected = newValue!;
-                          //               });
-                          //             }),
-                          //         Text(
-                          //           'I have read the agreement and I accept it',
-                          //           style: TextStyle(fontSize: 10),
-                          //         )
-                          //       ],
-                          //     )),
-                          Container(
-                            height: 50.0,
-                            width: 345,
-                            child: ElevatedButton(
-                              child: const Text('Confirm'),
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColors.blueDarkColor),
-                              onPressed: () {
-                                saveItem();
-                              },
+                    Padding(
+                      padding: const EdgeInsets.all(9.0),
+                      child: Container(
+                          height: 300,
+                          width: 400,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(
+                              15,
                             ),
                           ),
-                        ],
+                          child: selctFile.isEmpty
+                              ? Image.network(
+                                  defaultImageUrl,
+                                  fit: BoxFit.cover,
+                                )
+
+                              //==========================================//
+                              : Image.memory(selectedImageInBytes)),
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.02,
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.05,
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          //_showPicker(context);
+                          _selectFile(true);
+                        },
+                        icon: const Icon(
+                          Icons.camera,
+                        ),
+                        label: const Text(
+                          'Pick Image',
+                          style: TextStyle(),
+                        ),
                       ),
                     ),
-                    child: const Text('Confirm'),
-                    style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: AppColors.blueDarkColor),
-                  )),
-              const SizedBox(
-                height: 20,
-              ),
-              // Container(
-              //   width: 325,
-              //   child: ElevatedButton(
-              //     child: const Text('Your Product'),
-              //     style: ElevatedButton.styleFrom(
-              //         backgroundColor: AppColors.blueDarkColor),
-              //     onPressed: () {
-              //       // Navigator.push(
-              //       //   context,
-              //       //   MaterialPageRoute(
-              //       //       builder: (context) => LoginUserProductScreen()),
-              //       // );
-              //     },
-              //   ),
-              // ),
-              // const SizedBox(
-              //   height: 20,
-              // ),
-              // Container(
-              //   width: 325,
-              //   child: ElevatedButton(
-              //     child: const Text('All Product'),
-              //     style: ElevatedButton.styleFrom(
-              //         backgroundColor: AppColors.blueDarkColor),
-              //     onPressed: () {
-              //       Navigator.push(
-              //         context,
-              //         MaterialPageRoute(builder: (context) => HomeScreen()),
-              //       );
-              //     },
-              //   ),
-              // ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.02,
+                    ),
+                    // if (isItemSaved)
+                    //   Container(
+                    //     child: CircularProgressIndicator(
+                    //       color: Colors.green,
+                    //     ),
+                    //   ),
 
-              const SizedBox(
-                height: 20,
-              ),
-              // Container(
-              //   width: 325,
-              //   child: ElevatedButton(
-              //     child: const Text('Continue'),
-              //     style: ElevatedButton.styleFrom(
-              //         backgroundColor: AppColors.blueDarkColor),
-              //     onPressed: () {
-              //       saveItem();
-              //     },
-              //   ),
-              // ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 220, top: 20),
+                      child: Text(
+                        'Product Name',
+                        textAlign: TextAlign.start,
+                        style: ralewayStyle.copyWith(
+                          fontSize: 12.0,
+                          color: AppColors.blueDarkColor,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
 
-              //==============================================//
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.02,
-              ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Container(
+                        height: 50.0,
+                        width: 325,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16.0),
+                          color: AppColors.whiteColor,
+                        ),
+                        child: TextFormField(
+                          validator: (value) {
+                            return value!.isEmpty ? 'Product Name' : null;
+                          },
+                          controller: _itemNameController,
+                          style: ralewayStyle.copyWith(
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.blueDarkColor,
+                            fontSize: 12.0,
+                          ),
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            contentPadding:
+                                const EdgeInsets.only(top: 5.0, left: 12.0),
+                            hintText: 'Ex: CAR ',
+                            hintStyle: ralewayStyle.copyWith(
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.blueDarkColor.withOpacity(0.5),
+                              fontSize: 12.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
 
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.02,
+                    //==============================================//
+                    Padding(
+                      padding: const EdgeInsets.only(right: 240, top: 20),
+                      child: Text(
+                        'Item Price',
+                        textAlign: TextAlign.start,
+                        style: ralewayStyle.copyWith(
+                          fontSize: 12.0,
+                          color: AppColors.blueDarkColor,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Container(
+                        height: 50.0,
+                        width: 325,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16.0),
+                          color: AppColors.whiteColor,
+                        ),
+                        child: TextFormField(
+                          validator: (value) {
+                            return value!.isEmpty ? 'Item Price' : null;
+                          },
+                          controller: _itemPriceController,
+                          // onSaved: (value) {
+                          //   productData['p_name'] = value!;
+                          // },
+                          // controller: _emailTextController,
+                          style: ralewayStyle.copyWith(
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.blueDarkColor,
+                            fontSize: 12.0,
+                          ),
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+
+                            // prefixIcon: IconButton(
+                            //     onPressed: () {},
+                            //     icon: Image.asset(AppIcons.emailIcon)),
+                            contentPadding:
+                                const EdgeInsets.only(top: 5.0, left: 12.0),
+                            hintText: '\$200',
+                            hintStyle: ralewayStyle.copyWith(
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.blueDarkColor.withOpacity(0.5),
+                              fontSize: 12.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    //==============================================//
+                    Padding(
+                      padding: const EdgeInsets.only(right: 240, top: 20),
+                      child: Text(
+                        'Description',
+                        textAlign: TextAlign.start,
+                        style: ralewayStyle.copyWith(
+                          fontSize: 12.0,
+                          color: AppColors.blueDarkColor,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Container(
+                        height: 90.0,
+                        width: 325,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16.0),
+                          color: AppColors.whiteColor,
+                        ),
+                        child: TextFormField(
+                          keyboardType: TextInputType.multiline,
+                          minLines: 4, // <-- SEE HERE
+                          maxLines: 10,
+                          validator: (value) {
+                            return value!.isEmpty
+                                ? 'Product Description Required'
+                                : null;
+                          },
+                          controller: _itemDescriptionController,
+                          // onSaved: (value) {
+                          //   productData['Description'] = value!;
+                          // },
+                          // controller: _emailTextController,
+                          style: ralewayStyle.copyWith(
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.blueDarkColor,
+                            fontSize: 12.0,
+                          ),
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+
+                            // prefixIcon: IconButton(
+                            //     onPressed: () {},
+                            //     icon: Image.asset(AppIcons.emailIcon)),
+                            contentPadding:
+                                const EdgeInsets.only(top: 5.0, left: 12.0),
+                            hintText: 'Description',
+                            hintStyle: ralewayStyle.copyWith(
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.blueDarkColor.withOpacity(0.5),
+                              fontSize: 12.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 30.0),
+                      child: Text('Terms',
+                          style: ralewayStyle.copyWith(
+                            fontWeight: FontWeight.w800,
+                            color: AppColors.blueDarkColor,
+                          )),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    SizedBox(
+                      width: 300,
+                      child: Text(
+                        "By Listing you acknowledge the loperisum loperisum loperisum loperisum",
+                        style: TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+
+                    //==============================================//
+
+                    Padding(
+                      padding: const EdgeInsets.only(right: 240, top: 20),
+                      child: Text(
+                        'Enter Name',
+                        textAlign: TextAlign.start,
+                        style: ralewayStyle.copyWith(
+                          fontSize: 12.0,
+                          color: AppColors.blueDarkColor,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Container(
+                        height: 50.0,
+                        width: 325,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16.0),
+                          color: AppColors.whiteColor,
+                        ),
+                        child: TextFormField(
+                          validator: (value) {
+                            return value!.isEmpty ? 'Enter Name' : null;
+                          },
+                          controller: _itemSellerNameController,
+                          // onSaved: (value) {
+                          //   productData['p_name'] = value!;
+                          // },
+                          // controller: _emailTextController,
+                          style: ralewayStyle.copyWith(
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.blueDarkColor,
+                            fontSize: 12.0,
+                          ),
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+
+                            // prefixIcon: IconButton(
+                            //     onPressed: () {},
+                            //     icon: Image.asset(AppIcons.emailIcon)),
+                            contentPadding:
+                                const EdgeInsets.only(top: 5.0, left: 12.0),
+                            hintText: 'Enter Name',
+                            hintStyle: ralewayStyle.copyWith(
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.blueDarkColor.withOpacity(0.5),
+                              fontSize: 12.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 240, top: 20),
+                      child: Text(
+                        'Enter Date',
+                        textAlign: TextAlign.start,
+                        style: ralewayStyle.copyWith(
+                          fontSize: 12.0,
+                          color: AppColors.blueDarkColor,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Container(
+                        height: 50.0,
+                        width: 325,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16.0),
+                          color: AppColors.whiteColor,
+                        ),
+                        child: TextFormField(
+                          validator: (value) {
+                            return value!.isEmpty ? 'Enter Date' : null;
+                          },
+                          onTap: () {
+                            _selectDate(context);
+                          },
+                          readOnly: true,
+
+                          controller: _itemDateController,
+                          // onSaved: (value) {
+                          //   productData['p_name'] = value!;
+                          // },
+                          // controller: _emailTextController,
+                          style: ralewayStyle.copyWith(
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.blueDarkColor,
+                            fontSize: 12.0,
+                          ),
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+
+                            // prefixIcon: IconButton(
+                            //     onPressed: () {},
+                            //     icon: Image.asset(AppIcons.emailIcon)),
+                            contentPadding:
+                                const EdgeInsets.only(top: 5.0, left: 12.0),
+                            hintText: 'Enter date',
+                            hintStyle: ralewayStyle.copyWith(
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.blueDarkColor.withOpacity(0.5),
+                              fontSize: 12.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 240, top: 20),
+                      child: Text(
+                        'Your Location',
+                        textAlign: TextAlign.start,
+                        style: ralewayStyle.copyWith(
+                          fontSize: 12.0,
+                          color: AppColors.blueDarkColor,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Container(
+                        height: 50.0,
+                        width: 325,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16.0),
+                          color: AppColors.whiteColor,
+                        ),
+                        child: TextFormField(
+                          validator: (value) {
+                            return value!.isEmpty ? 'Location' : null;
+                          },
+                          onTap: () {
+                            userLoc();
+                          },
+                          controller: _itemLocationController,
+                          // onSaved: (value) {
+                          //   productData['p_name'] = value!;
+                          // },
+                          // controller: _emailTextController,
+                          style: ralewayStyle.copyWith(
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.blueDarkColor,
+                            fontSize: 12.0,
+                          ),
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+
+                            // prefixIcon: IconButton(
+                            //     onPressed: () {},
+                            //     icon: Image.asset(AppIcons.emailIcon)),
+                            contentPadding:
+                                const EdgeInsets.only(top: 5.0, left: 12.0),
+                            hintText: 'Enter Location',
+                            hintStyle: ralewayStyle.copyWith(
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.blueDarkColor.withOpacity(0.5),
+                              fontSize: 12.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    // Padding(
+                    //   padding: const EdgeInsets.only(right: 240, top: 20),
+                    //   child: Text(
+                    //     'Signature',
+                    //     textAlign: TextAlign.start,
+                    //     style: ralewayStyle.copyWith(
+                    //       fontSize: 12.0,
+                    //       color: AppColors.blueDarkColor,
+                    //       fontWeight: FontWeight.w700,
+                    //     ),
+                    //   ),
+                    // ),
+                    // Padding(
+                    //   padding: const EdgeInsets.only(top: 20),
+                    //   child: Container(
+                    //     width: 350,
+                    //     child: SfSignaturePad(
+                    //       key: key,
+                    //       backgroundColor: Colors.grey.shade400,
+                    //       strokeColor: c,
+                    //       minimumStrokeWidth: 10,
+                    //       maximumStrokeWidth: min,
+                    //     ),
+                    //   ),
+                    // ),
+                    SizedBox(
+                      height: size.height / 80,
+                    ),
+                    // ElevatedButton(
+                    //     style: ElevatedButton.styleFrom(
+                    //         backgroundColor: AppColors.blueDarkColor),
+                    //     onPressed: () {
+                    //       key.currentState!.clear();
+                    //     },
+                    //     child: Text('Clear')),
+                    // SizedBox(
+                    //   height: size.height / 80,
+                    // ),
+                    Container(
+                        width: 325,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Checkbox(
+                                value: isChecked,
+                                onChanged: (bool? newValue) {
+                                  setState(() {
+                                    isChecked = newValue!;
+                                  });
+                                }),
+                            Text(
+                              'I have read the agreement and I accept it',
+                              style: TextStyle(fontSize: 16),
+                            )
+                          ],
+                        )),
+                    const SizedBox(
+                      height: 5,
+                    ),
+
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 30.0),
+                      child: Text('Payment Details',
+                          style: ralewayStyle.copyWith(
+                            fontWeight: FontWeight.w800,
+                            color: AppColors.blueDarkColor,
+                          )),
+                    ),
+                    SizedBox(
+                      height: size.height / 80,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 30.0),
+                      child:
+                          Text('Enter bank details where you want to get paid',
+                              style: ralewayStyle.copyWith(
+                                fontWeight: FontWeight.w800,
+                                color: AppColors.blueDarkColor,
+                              )),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 240, top: 20),
+                      child: Text(
+                        'Account No',
+                        textAlign: TextAlign.start,
+                        style: ralewayStyle.copyWith(
+                          fontSize: 12.0,
+                          color: AppColors.blueDarkColor,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Container(
+                        height: 50.0,
+                        width: 325,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16.0),
+                          color: AppColors.whiteColor,
+                        ),
+                        child: TextFormField(
+                          validator: (value) {
+                            return value!.isEmpty ? 'Account_no' : null;
+                          },
+                          controller: _itemAccountNoController,
+                          // onSaved: (value) {
+                          //   productData['p_name'] = value!;
+                          // },
+                          // controller: _emailTextController,
+                          style: ralewayStyle.copyWith(
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.blueDarkColor,
+                            fontSize: 12.0,
+                          ),
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+
+                            // prefixIcon: IconButton(
+                            //     onPressed: () {},
+                            //     icon: Image.asset(AppIcons.emailIcon)),
+                            contentPadding:
+                                const EdgeInsets.only(top: 5.0, left: 12.0),
+                            hintText: 'Enter Account No',
+                            hintStyle: ralewayStyle.copyWith(
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.blueDarkColor.withOpacity(0.5),
+                              fontSize: 12.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 240, top: 20),
+                      child: Text(
+                        'Institution No',
+                        textAlign: TextAlign.start,
+                        style: ralewayStyle.copyWith(
+                          fontSize: 12.0,
+                          color: AppColors.blueDarkColor,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Container(
+                        height: 50.0,
+                        width: 325,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16.0),
+                          color: AppColors.whiteColor,
+                        ),
+                        child: TextFormField(
+                          validator: (value) {
+                            return value!.isEmpty ? 'Institution' : null;
+                          },
+                          controller: _itemInstitutionNoController,
+                          // onSaved: (value) {
+                          //   productData['p_name'] = value!;
+                          // },
+                          // controller: _emailTextController,
+                          style: ralewayStyle.copyWith(
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.blueDarkColor,
+                            fontSize: 12.0,
+                          ),
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+
+                            // prefixIcon: IconButton(
+                            //     onPressed: () {},
+                            //     icon: Image.asset(AppIcons.emailIcon)),
+                            contentPadding:
+                                const EdgeInsets.only(top: 5.0, left: 12.0),
+                            hintText: 'Enter Transit No',
+                            hintStyle: ralewayStyle.copyWith(
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.blueDarkColor.withOpacity(0.5),
+                              fontSize: 12.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 240, top: 20),
+                      child: Text(
+                        'Transit No',
+                        textAlign: TextAlign.start,
+                        style: ralewayStyle.copyWith(
+                          fontSize: 12.0,
+                          color: AppColors.blueDarkColor,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Container(
+                        height: 50.0,
+                        width: 325,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16.0),
+                          color: AppColors.whiteColor,
+                        ),
+                        child: TextFormField(
+                          validator: (value) {
+                            return value!.isEmpty ? 'Institution' : null;
+                          },
+                          controller: _itemTransitNoController,
+                          // onSaved: (value) {
+                          //   productData['p_name'] = value!;
+                          // },
+                          // controller: _emailTextController,
+                          style: ralewayStyle.copyWith(
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.blueDarkColor,
+                            fontSize: 12.0,
+                          ),
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+
+                            // prefixIcon: IconButton(
+                            //     onPressed: () {},
+                            //     icon: Image.asset(AppIcons.emailIcon)),
+                            contentPadding:
+                                const EdgeInsets.only(top: 5.0, left: 12.0),
+                            hintText: 'Enter Transit  No',
+                            hintStyle: ralewayStyle.copyWith(
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.blueDarkColor.withOpacity(0.5),
+                              fontSize: 12.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 30.0),
+                      child: Text('Authorization / Fees',
+                          style: ralewayStyle.copyWith(
+                            fontWeight: FontWeight.w800,
+                            color: AppColors.blueDarkColor,
+                          )),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    SizedBox(
+                      width: 300,
+                      child: Text(
+                        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
+                        style: TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Container(),
+
+                    //====================================//
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      width: 325,
+                      // child: ElevatedButton(
+                      //   child: const Text('Go to review page'),
+                      //   style: ElevatedButton.styleFrom(
+                      //       backgroundColor: AppColors.blueDarkColor),
+                      //   onPressed: () {
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //           builder: (context) => const ReviewPage()),
+                      //     );
+                      //   },
+                      // ),
+                    ),
+
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                        height: 50.0,
+                        width: 345,
+                        child: TextButton(
+                          onPressed: () => showDialog<String>(
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                              // title: const Text('AlertDialog Title'),
+                              content: const Text(
+                                  'To confirm, click confirm button'),
+
+                              actions: <Widget>[
+                                Container(
+                                  height: 50.0,
+                                  width: 345,
+                                  child: ElevatedButton(
+                                    child: const Text('Confirm'),
+                                    style: ElevatedButton.styleFrom(
+                                        backgroundColor:
+                                            AppColors.blueDarkColor),
+                                    onPressed: () {
+                                      saveItem();
+                                      GoRouter.of(context).pop();
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          child: const Text('Confirm'),
+                          style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              backgroundColor: AppColors.blueDarkColor),
+                        )),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    // Container(
+                    //   width: 325,
+                    //   child: ElevatedButton(
+                    //     child: const Text('Your Product'),
+                    //     style: ElevatedButton.styleFrom(
+                    //         backgroundColor: AppColors.blueDarkColor),
+                    //     onPressed: () {
+                    //       // Navigator.push(
+                    //       //   context,
+                    //       //   MaterialPageRoute(
+                    //       //       builder: (context) => LoginUserProductScreen()),
+                    //       // );
+                    //     },
+                    //   ),
+                    // ),
+                    // const SizedBox(
+                    //   height: 20,
+                    // ),
+                    // Container(
+                    //   width: 325,
+                    //   child: ElevatedButton(
+                    //     child: const Text('All Product'),
+                    //     style: ElevatedButton.styleFrom(
+                    //         backgroundColor: AppColors.blueDarkColor),
+                    //     onPressed: () {
+                    //       Navigator.push(
+                    //         context,
+                    //         MaterialPageRoute(builder: (context) => HomeScreen()),
+                    //       );
+                    //     },
+                    //   ),
+                    // ),
+
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    // Container(
+                    //   width: 325,
+                    //   child: ElevatedButton(
+                    //     child: const Text('Continue'),
+                    //     style: ElevatedButton.styleFrom(
+                    //         backgroundColor: AppColors.blueDarkColor),
+                    //     onPressed: () {
+                    //       saveItem();
+                    //     },
+                    //   ),
+                    // ),
+
+                    //==============================================//
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.02,
+                    ),
+
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.02,
+                    ),
+                  ],
+                ),
               ),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 }

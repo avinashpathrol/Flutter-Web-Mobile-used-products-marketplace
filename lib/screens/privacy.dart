@@ -7,7 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:marketplace/app_routes/app_route.dart';
 import 'package:marketplace/components/topbar.dart';
 import 'package:marketplace/screens/login_page.dart';
-import 'package:marketplace/screens/myProfile.dart';
+import 'package:marketplace/screens/new/myProfile.dart';
 
 class Privacy extends StatelessWidget {
   const Privacy({super.key});
