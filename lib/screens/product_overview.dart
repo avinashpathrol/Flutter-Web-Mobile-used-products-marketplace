@@ -46,6 +46,8 @@ class _ProductOverviewState extends State<ProductOverview>
 
     super.initState();
     _getCurrentLocation();
+    _itemPartialPayController.text = "\$" + percent().toString();
+    _itemFullPayController.text = "\$" + widget.product.price.toString();
   }
 
   Position? _curentPosition;
@@ -177,7 +179,7 @@ class _ProductOverviewState extends State<ProductOverview>
 
   TextEditingController _itemPartialPayController = TextEditingController();
 
-  // TextEditingController _institutionnoController = TextEditingController();
+  TextEditingController _itemFullPayController = TextEditingController();
 
   TextEditingController _signatureController = TextEditingController();
 
@@ -195,6 +197,10 @@ class _ProductOverviewState extends State<ProductOverview>
     return now.microsecondsSinceEpoch.toString();
   }
 
+  double percent() {
+    return double.parse(widget.product.price!) * 0.10;
+  }
+
   String signUrl = '';
   String psignUrl = '';
 
@@ -202,8 +208,10 @@ class _ProductOverviewState extends State<ProductOverview>
   String paymentType = '';
 
   // SingingCharacter? _character = SingingCharacter.lafayette;
+
   @override
   Widget build(BuildContext context) {
+    // print("okok ${percent()}");
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       controller.getLoginUserProduct();
     });
@@ -804,6 +812,7 @@ class _ProductOverviewState extends State<ProductOverview>
                                             MainAxisAlignment.spaceEvenly,
                                         children: [
                                           TextFormField(
+                                            readOnly: true,
                                             validator: (value) {
                                               return value!.isEmpty
                                                   ? 'Put 10% of the product cost as patial payment'
@@ -852,14 +861,14 @@ class _ProductOverviewState extends State<ProductOverview>
                                             MainAxisAlignment.spaceEvenly,
                                         children: [
                                           TextFormField(
+                                            readOnly: true,
                                             validator: (value) {
                                               return value!.isEmpty
                                                   ? ' 10% as patial payment'
                                                   : null;
                                             },
                                             // controller: _itemLocationController,
-                                            controller:
-                                                _itemPartialPayController,
+                                            controller: _itemFullPayController,
 
                                             style: ralewayStyle.copyWith(
                                               fontWeight: FontWeight.w400,
