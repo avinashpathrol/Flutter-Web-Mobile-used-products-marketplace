@@ -92,7 +92,9 @@ class _SignedAgreementdsState extends State<SignedAgreementds> {
                                   ),
                                 ],
                               ),
-                              SizedBox(width: 10),
+                              SizedBox(
+                                width: 10,
+                              ),
                               Column(
                                 children: [
                                   Text(
@@ -132,13 +134,6 @@ class _SignedAgreementdsState extends State<SignedAgreementds> {
                                       ),
                                     ),
                                   ),
-                                  // Text(
-                                  //   'tap on image to view',
-                                  //   style: TextStyle(color: Colors.grey),
-                                  // ),
-                                  // Text("Product Price ${data['price']}"),
-                                  // Text("Product Name ${data['name']}"),
-                                  // Text("Product Name ${data['name']}"),
                                 ],
                               ),
                               SizedBox(width: 10),
@@ -176,13 +171,6 @@ class _SignedAgreementdsState extends State<SignedAgreementds> {
                                       ),
                                     ),
                                   ),
-                                  // Text(
-                                  //   'tap on image to view',
-                                  //   style: TextStyle(color: Colors.grey),
-                                  // ),
-                                  // Text("Product Price ${data['price']}"),
-                                  // Text("Product Name ${data['name']}"),
-                                  // Text("Product Name ${data['name']}"),
                                 ],
                               ),
                               SizedBox(width: 10),
