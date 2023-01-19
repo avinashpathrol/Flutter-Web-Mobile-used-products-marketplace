@@ -6,6 +6,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:go_router/go_router.dart';
+import 'package:marketplace/app_routes/app_route.dart';
 import 'package:marketplace/screens/signature_page.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 import 'dart:ui' as ui;
@@ -69,7 +71,8 @@ class _ViewAgreementdsState extends State<ViewAgreementds> {
     }).then((value) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("Agreement accepted")));
-      Navigator.pop(context);
+      // Navigator.pop(context);
+      GoRouter.of(context).goNamed(RouteCon.signedagreements);
     });
 
     return Future.value(uploadTask);
@@ -96,6 +99,38 @@ class _ViewAgreementdsState extends State<ViewAgreementds> {
     print('inside the update Agreement Function');
   }
 
+  String? field;
+
+  changeField() {
+    FirebaseFirestore.instance
+        .collection('Agreement')
+        .where('agreementStatus', isEqualTo: true)
+        .get()
+        .then((value) {
+      value.docs.forEach((e) {
+        if (FirebaseAuth.instance.currentUser!.uid == e['buyer_id']) {
+          setState(() {
+            field = 'buyer_id';
+            print("pppp $field");
+          });
+        } else {
+          setState(() {
+            field = 'sellerId';
+            print("pppp $field");
+          });
+        }
+      });
+    });
+    print("pppp $field");
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    changeField();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -103,87 +138,47 @@ class _ViewAgreementdsState extends State<ViewAgreementds> {
         preferredSize: Size.fromHeight(60.0),
         child: TopBar(),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: StreamBuilder(
-              stream: FirebaseFirestore.instance
-                  .collection('Agreement')
-                  .snapshots(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (!snapshot.hasData) {
-                  return Center(child: Text('no agreement'));
-                }
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ListView.builder(
-                    itemCount: snapshot.data!.docs.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final data = snapshot.data!.docs[index];
+      body: field == null
+          ? Center(child: CircularProgressIndicator())
+          : Column(
+              children: [
+                Expanded(
+                  child: StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                        .collection('Agreement')
+                        .where('agreementStatus', isEqualTo: true)
+                        .where('$field',
+                            isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+                        .snapshots(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (!snapshot.hasData) {
+                        return Center(child: Text('no agreement'));
+                      }
                       return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ExpansionTileCard(
-                            leading: Image.network(
-                              data['img'],
-                              fit: BoxFit.cover,
-                            ),
-                            title: Text("Product Name  : ${data['name']}"),
-                            children: [
-                              Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    children: [
-                                      Text(
-                                        "Order from ${data['client_name']}",
-                                        style: TextStyle(fontSize: 20),
-                                      ),
-                                      SizedBox(height: 5),
-                                      Container(
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.1,
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.1,
-                                        // height: MediaQuery.of(context).size.height * 0.35,
-                                        // width: MediaQuery.of(context).size.width * 0.3,
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            showImageViewer(
-                                                context,
-                                                Image.network(data[
-                                                        'client_signature'])
-                                                    .image,
-                                                swipeDismissible: false);
-                                          },
-                                          child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(2),
-                                            child: Image.network(
-                                              data['client_signature'],
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Text(
-                                        'tap on image to view',
-                                        style: TextStyle(color: Colors.grey),
-                                      ),
-                                      // Text("Product Price ${data['price']}"),
-                                      // Text("Product Name ${data['name']}"),
-                                      // Text("Product Name ${data['name']}"),
-                                    ],
+                        padding: const EdgeInsets.all(8.0),
+                        child: ListView.builder(
+                          itemCount: snapshot.data!.docs.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            final data = snapshot.data!.docs[index];
+                            return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ExpansionTileCard(
+                                  leading: Image.network(
+                                    data['img'],
+                                    fit: BoxFit.cover,
                                   ),
-                                  data['signature'] == null
-                                      ? Container()
-                                      : Column(
+                                  title:
+                                      Text("Product Name  : ${data['name']}"),
+                                  children: [
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Column(
                                           children: [
                                             Text(
-                                              "Seller Name ${data['seller_name']}",
+                                              "Order from ${data['client_name']}",
                                               style: TextStyle(fontSize: 20),
                                             ),
                                             SizedBox(height: 5),
@@ -202,8 +197,8 @@ class _ViewAgreementdsState extends State<ViewAgreementds> {
                                                 onTap: () {
                                                   showImageViewer(
                                                       context,
-                                                      Image.network(
-                                                              data['signature'])
+                                                      Image.network(data[
+                                                              'client_signature'])
                                                           .image,
                                                       swipeDismissible: false);
                                                 },
@@ -211,7 +206,7 @@ class _ViewAgreementdsState extends State<ViewAgreementds> {
                                                   borderRadius:
                                                       BorderRadius.circular(2),
                                                   child: Image.network(
-                                                    data['signature'],
+                                                    data['client_signature'],
                                                     fit: BoxFit.cover,
                                                   ),
                                                 ),
@@ -227,95 +222,184 @@ class _ViewAgreementdsState extends State<ViewAgreementds> {
                                             // Text("Product Name ${data['name']}"),
                                           ],
                                         ),
-                                  Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      data['sellerId'] ==
-                                              FirebaseAuth
-                                                  .instance.currentUser!.uid
-                                          ? Container(
+                                        data['signature'] == null
+                                            ? Container()
+                                            : Column(
+                                                children: [
+                                                  Text(
+                                                    "Seller Name ${data['seller_name']}",
+                                                    style:
+                                                        TextStyle(fontSize: 20),
+                                                  ),
+                                                  SizedBox(height: 5),
+                                                  Container(
+                                                    height:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .height *
+                                                            0.1,
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width *
+                                                            0.1,
+                                                    // height: MediaQuery.of(context).size.height * 0.35,
+                                                    // width: MediaQuery.of(context).size.width * 0.3,
+                                                    child: GestureDetector(
+                                                      onTap: () {
+                                                        showImageViewer(
+                                                            context,
+                                                            Image.network(data[
+                                                                    'signature'])
+                                                                .image,
+                                                            swipeDismissible:
+                                                                false);
+                                                      },
+                                                      child: ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(2),
+                                                        child: Image.network(
+                                                          data['signature'],
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    'tap on image to view',
+                                                    style: TextStyle(
+                                                        color: Colors.grey),
+                                                  ),
+                                                  // Text("Product Price ${data['price']}"),
+                                                  // Text("Product Name ${data['name']}"),
+                                                  // Text("Product Name ${data['name']}"),
+                                                ],
+                                              ),
+                                        Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            data['sellerId'] ==
+                                                    FirebaseAuth.instance
+                                                        .currentUser!.uid
+                                                ? Container(
+                                                    height: 50.0,
+                                                    width: 345,
+                                                    child: ElevatedButton(
+                                                        onPressed:
+                                                            data['agreementStatus'] ==
+                                                                    true
+                                                                ? null
+                                                                : () async {
+                                                                    showDialog(
+                                                                        context:
+                                                                            context,
+                                                                        builder:
+                                                                            (context) {
+                                                                          return isLoading
+                                                                              ? AlertDialog(
+                                                                                  content: CircularProgressIndicator(),
+                                                                                )
+                                                                              : AlertDialog(
+                                                                                  title: const Text('Please put your signature to accept agreement'),
+                                                                                  content: Container(
+                                                                                    width: 350,
+                                                                                    child: SfSignaturePad(
+                                                                                      key: key,
+                                                                                      backgroundColor: Colors.grey.shade400,
+                                                                                      // strokeColor: c,
+                                                                                      minimumStrokeWidth: 10,
+                                                                                      maximumStrokeWidth: 4,
+                                                                                    ),
+                                                                                  ),
+                                                                                  actions: <Widget>[
+                                                                                    Container(
+                                                                                      height: 50.0,
+                                                                                      width: MediaQuery.of(context).size.width * 0.8,
+                                                                                      child: ElevatedButton(
+                                                                                        child: const Text('Confirm'),
+                                                                                        style: ElevatedButton.styleFrom(backgroundColor: AppColors.blueDarkColor),
+                                                                                        onPressed: () async {
+                                                                                          UpdateAgreement(data.id);
+                                                                                        },
+                                                                                      ),
+                                                                                    ),
+                                                                                  ],
+                                                                                );
+                                                                        });
+                                                                  },
+                                                        // icon: const Icon(Icons.accept),
+                                                        style: ElevatedButton.styleFrom(
+                                                            backgroundColor:
+                                                                data['agreementStatus'] ==
+                                                                        true
+                                                                    ? AppColors
+                                                                        .greyColor
+                                                                    : AppColors
+                                                                        .greeen),
+                                                        child: data['agreementStatus'] ==
+                                                                true
+                                                            ? Text(
+                                                                "Agreement signed")
+                                                            : Text(
+                                                                "Accept Agreement")),
+                                                  )
+                                                : Container(),
+                                            SizedBox(height: 10),
+                                            data['sellerId'] ==
+                                                    FirebaseAuth.instance
+                                                        .currentUser!.uid
+                                                ? Container(
+                                                    height: 50.0,
+                                                    width: 345,
+                                                    child: ElevatedButton(
+                                                        onPressed: () async {
+                                                          await FirebaseFirestore
+                                                              .instance
+                                                              .collection(
+                                                                  'Agreement')
+                                                              .doc(data.id)
+                                                              .update({
+                                                            'agreementStatus':
+                                                                false,
+                                                            'signature': null,
+                                                          }).then((value) {
+                                                            ScaffoldMessenger
+                                                                    .of(context)
+                                                                .showSnackBar(
+                                                                    SnackBar(
+                                                                        content:
+                                                                            Text("Agreement canceled")));
+                                                          });
+                                                        },
+                                                        // icon: const Icon(Icons.accept),
+                                                        style: ElevatedButton
+                                                            .styleFrom(
+                                                                backgroundColor:
+                                                                    AppColors
+                                                                        .mainBlueColor),
+                                                        child: const Text(
+                                                            "Cancel Agreement")),
+                                                  )
+                                                : Container(
+                                                    child: data['agreementStatus'] ==
+                                                            true
+                                                        ? Text(
+                                                            "Agreement Accepted")
+                                                        : Text(
+                                                            "Waiting for approval")),
+                                            SizedBox(height: 10),
+                                            Container(
                                               height: 50.0,
                                               width: 345,
                                               child: ElevatedButton(
-                                                  onPressed:
-                                                      data['agreementStatus'] ==
-                                                              true
-                                                          ? null
-                                                          : () async {
-                                                              showDialog(
-                                                                  context:
-                                                                      context,
-                                                                  builder:
-                                                                      (context) {
-                                                                    return isLoading
-                                                                        ? AlertDialog(
-                                                                            content:
-                                                                                CircularProgressIndicator(),
-                                                                          )
-                                                                        : AlertDialog(
-                                                                            title:
-                                                                                const Text('Please put your signature to accept agreement'),
-                                                                            content:
-                                                                                Container(
-                                                                              width: 350,
-                                                                              child: SfSignaturePad(
-                                                                                key: key,
-                                                                                backgroundColor: Colors.grey.shade400,
-                                                                                // strokeColor: c,
-                                                                                minimumStrokeWidth: 10,
-                                                                                maximumStrokeWidth: 4,
-                                                                              ),
-                                                                            ),
-                                                                            actions: <Widget>[
-                                                                              Container(
-                                                                                height: 50.0,
-                                                                                width: MediaQuery.of(context).size.width * 0.8,
-                                                                                child: ElevatedButton(
-                                                                                  child: const Text('Confirm'),
-                                                                                  style: ElevatedButton.styleFrom(backgroundColor: AppColors.blueDarkColor),
-                                                                                  onPressed: () async {
-                                                                                    UpdateAgreement(data.id);
-                                                                                  },
-                                                                                ),
-                                                                              ),
-                                                                            ],
-                                                                          );
-                                                                  });
-                                                            },
-                                                  // icon: const Icon(Icons.accept),
-                                                  style: ElevatedButton.styleFrom(
-                                                      backgroundColor:
-                                                          data['agreementStatus'] ==
-                                                                  true
-                                                              ? AppColors
-                                                                  .greyColor
-                                                              : AppColors
-                                                                  .greeen),
-                                                  child: data['agreementStatus'] ==
-                                                          true
-                                                      ? Text("Agreement signed")
-                                                      : Text(
-                                                          "Accept Agreement")),
-                                            )
-                                          : Container(),
-                                      SizedBox(height: 10),
-                                      data['sellerId'] ==
-                                              FirebaseAuth
-                                                  .instance.currentUser!.uid
-                                          ? Container(
-                                              height: 50.0,
-                                              width: 345,
-                                              child: ElevatedButton(
-                                                  onPressed: () async {
-                                                    await FirebaseFirestore
-                                                        .instance
+                                                  onPressed: () {
+                                                    FirebaseFirestore.instance
                                                         .collection('Agreement')
                                                         .doc(data.id)
-                                                        .update({
-                                                      'agreementStatus': false,
-                                                      'signature': null,
-                                                    }).then((value) {
+                                                        .delete()
+                                                        .then((value) {
                                                       ScaffoldMessenger.of(
                                                               context)
                                                           .showSnackBar(SnackBar(
@@ -324,56 +408,28 @@ class _ViewAgreementdsState extends State<ViewAgreementds> {
                                                     });
                                                   },
                                                   // icon: const Icon(Icons.accept),
-                                                  style: ElevatedButton.styleFrom(
-                                                      backgroundColor: AppColors
-                                                          .mainBlueColor),
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                          backgroundColor:
+                                                              AppColors
+                                                                  .redColor),
                                                   child: const Text(
-                                                      "Cancel Agreement")),
-                                            )
-                                          : Container(
-                                              child: data['agreementStatus'] ==
-                                                      true
-                                                  ? Text("Agreement Accepted")
-                                                  : Text(
-                                                      "Waiting for approval")),
-                                      SizedBox(height: 10),
-                                      Container(
-                                        height: 50.0,
-                                        width: 345,
-                                        child: ElevatedButton(
-                                            onPressed: () {
-                                              FirebaseFirestore.instance
-                                                  .collection('Agreement')
-                                                  .doc(data.id)
-                                                  .delete()
-                                                  .then((value) {
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(SnackBar(
-                                                        content: Text(
-                                                            "Agreement canceled")));
-                                              });
-                                            },
-                                            // icon: const Icon(Icons.accept),
-                                            style: ElevatedButton.styleFrom(
-                                                backgroundColor:
-                                                    AppColors.redColor),
-                                            child:
-                                                const Text("Delete Agreement")),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ));
+                                                      "Delete Agreement")),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ));
+                          },
+                        ),
+                      );
                     },
                   ),
-                );
-              },
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
     );
   }
 }
