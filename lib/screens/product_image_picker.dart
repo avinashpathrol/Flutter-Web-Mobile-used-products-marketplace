@@ -810,24 +810,7 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
                       // SizedBox(
                       //   height: size.height / 80,
                       // ),
-                      Container(
-                          width: 325,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Checkbox(
-                                  value: isChecked,
-                                  onChanged: (bool? newValue) {
-                                    setState(() {
-                                      isChecked = newValue!;
-                                    });
-                                  }),
-                              Text(
-                                'I have read the agreement and I accept it',
-                                style: TextStyle(fontSize: 16),
-                              )
-                            ],
-                          )),
+
                       const SizedBox(
                         height: 5,
                       ),
@@ -1075,6 +1058,24 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
                         //   },
                         // ),
                       ),
+                      Container(
+                          width: 325,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Checkbox(
+                                  value: isChecked,
+                                  onChanged: (bool? newValue) {
+                                    setState(() {
+                                      isChecked = newValue!;
+                                    });
+                                  }),
+                              Text(
+                                'I have read the agreement and I accept it',
+                                style: TextStyle(fontSize: 16),
+                              )
+                            ],
+                          )),
 
                       const SizedBox(
                         height: 20,
