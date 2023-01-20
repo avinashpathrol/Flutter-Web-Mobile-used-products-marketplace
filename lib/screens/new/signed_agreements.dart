@@ -3,12 +3,9 @@ import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:go_router/go_router.dart';
 import 'package:marketplace/app_routes/app_route.dart';
 import 'package:marketplace/model/Agreement.dart';
-import 'package:marketplace/screens/new/myProfile.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 
 import '../../components/topbar.dart';
@@ -26,7 +23,7 @@ class _SignedAgreementdsState extends State<SignedAgreementds> {
   changeField() {
     FirebaseFirestore.instance
         .collection('Agreement')
-        .where('agreementStatus', isEqualTo: true)
+        // .where('agreementStatus', isEqualTo: true)
         .get()
         .then((value) {
       value.docs.forEach((e) {
@@ -43,7 +40,7 @@ class _SignedAgreementdsState extends State<SignedAgreementds> {
         }
       });
     });
-    print("pppp $field");
+    print("signed $field");
   }
 
   @override

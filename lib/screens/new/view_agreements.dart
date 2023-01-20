@@ -104,7 +104,7 @@ class _ViewAgreementdsState extends State<ViewAgreementds> {
   changeField() {
     FirebaseFirestore.instance
         .collection('Agreement')
-        .where('agreementStatus', isEqualTo: true)
+        // .where('agreementStatus', isEqualTo: true)
         .get()
         .then((value) {
       value.docs.forEach((e) {
@@ -146,7 +146,7 @@ class _ViewAgreementdsState extends State<ViewAgreementds> {
                   child: StreamBuilder(
                     stream: FirebaseFirestore.instance
                         .collection('Agreement')
-                        .where('agreementStatus', isEqualTo: true)
+                        // .where('agreementStatus', isEqualTo: true)
                         .where('$field',
                             isEqualTo: FirebaseAuth.instance.currentUser!.uid)
                         .snapshots(),
