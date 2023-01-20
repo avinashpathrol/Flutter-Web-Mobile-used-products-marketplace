@@ -18,11 +18,13 @@ class Agreement {
   final String partial_pay;
   final String productId;
   final String seller_name;
+  final String docId;
 
   Agreement(
       {required this.name,
       required this.description,
       required this.price,
+      required this.docId,
       required this.signature,
       required this.location,
       required this.user_Id,

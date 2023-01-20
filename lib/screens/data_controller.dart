@@ -152,6 +152,7 @@ class DataController extends GetxController {
                 name: result['name'],
                 price: result['price'],
                 img: result['img'],
+                docId: result.id,
                 description: result['description'],
                 location: result['location'],
                 date: result['date'],

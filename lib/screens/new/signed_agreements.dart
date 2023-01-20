@@ -224,6 +224,7 @@ class _SignedAgreementdsState extends State<SignedAgreementds> {
                                                   // controller.loginAgreementData[index];
                                                   Agreement agreement =
                                                       Agreement(
+                                                          docId: data.id,
                                                           name: data['name'], //
                                                           description: data[
                                                               'description'], //

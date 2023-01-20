@@ -230,7 +230,7 @@ class LoginUserProductScreen extends StatelessWidget {
             loginUserData.add(
               Product(
                 productId: result['productId'],
-                signature: result['signature'],
+                // signature: result['signature'],
                 seller_name: result['seller_name'],
                 userId: result['user_Id'],
                 name: result['name'],
@@ -321,7 +321,8 @@ class LoginUserProductScreen extends StatelessWidget {
                               onPressed: () {
                                 GoRouter.of(context).goNamed(
                                     RouteCon.editproduct,
-                                    extra: controller.loginUserData[index]);
+                                    extra: controller
+                                        .loginUserData[index].productId);
                               },
                               child: Text('Edit'),
                             ),

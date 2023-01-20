@@ -249,8 +249,9 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
 
     final User? user = auth.currentUser;
     final uid = user?.uid;
+    var unique = uuid.v4();
     // var id = await FirebaseFirestore.instance.collection('productData').doc();
-    await FirebaseFirestore.instance.collection('productData').add({
+    await FirebaseFirestore.instance.collection('productData').doc(unique).set({
       'name': _itemNameController.text,
       'seller_name': _itemSellerNameController.text,
       'price': _itemPriceController.text,
@@ -260,7 +261,7 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
       // 'signature': signature,
       'img': imageUrl,
       'user_Id': uid,
-      'productId': uuid.v4(),
+      'productId': unique,
       // 'signUrl': signUrl,
       'account_no': _itemAccountNoController.text,
       'institution_no': _itemInstitutionNoController.text,

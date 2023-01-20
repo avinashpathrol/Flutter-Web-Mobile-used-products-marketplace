@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
@@ -292,8 +294,40 @@ class ShowAgreement extends StatelessWidget {
                       children: [
                         Expanded(
                           child: customButtom(size, () {
-                            GoRouter.of(context)
-                                .pushNamed(RouteCon.signoff, extra: agreement);
+                            showDialog(
+                                context: context,
+                                builder: (c) {
+                                  return AlertDialog(
+                                    title: Text("Final Sign Off"),
+                                    actions: [
+                                      MaterialButton(
+                                        onPressed: () async {
+                                          Navigator.pop(context);
+                                          FirebaseFirestore.instance
+                                              .collection('productData')
+                                              .doc(agreement.productId)
+                                              .delete()
+                                              .then((value) => ScaffoldMessenger
+                                                      .of(context)
+                                                  .showSnackBar(SnackBar(
+                                                      content: Text(
+                                                          "Thankyou for Purchasing"))));
+                                        },
+                                        child: Text("AGREED"),
+                                        color: Colors.green,
+                                      ),
+                                      MaterialButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text("DISAGREE"),
+                                        color: Colors.red,
+                                      ),
+                                    ],
+                                  );
+                                });
+                            // GoRouter.of(context)
+                            //     .pushNamed(RouteCon.signoff, extra: agreement);
                           }, Colors.white, "Final Sign Off"),
                         ),
                         Expanded(

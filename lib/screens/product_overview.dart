@@ -143,21 +143,27 @@ class _ProductOverviewState extends State<ProductOverview>
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('Agreement Uploaded')));
       // sendPushMessage();
+      print(value.id);
+      FirebaseFirestore.instance
+          .collection('Agreement')
+          .doc(value.id)
+          .update({'docId': value.id});
       setState(() {
         isLoading = false;
       });
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Please wait from buyer side to accep agreement')));
-      Navigator.pop(context);
 
       FirebaseFirestore.instance
           .collection('users')
           .doc(widget.product.userId)
           .get()
           .then((value) {
-        print("pppp ${value['deviceToken']}");
+        // print("pppp ${value['deviceToken']}");
         sendPushMessageToWeb(
             value['deviceToken'], 'new agreement recieved', 'detail ');
+        Navigator.pop(context);
+        GoRouter.of(context).goNamed(RouteCon.showagreement);
       });
       // GoRouter.of(context).pushNamed(RouteCon.finalscreen);
       // Navigator.of(context)
@@ -309,872 +315,926 @@ class _ProductOverviewState extends State<ProductOverview>
               body: SizedBox(
                 height: size.height,
                 width: size.width,
-                child: SingleChildScrollView(
-                    child: Form(
-                  key: _formKey,
-                  child: Column(
-                    // mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        height: 300,
-                        width: 400,
-                        child: PageView.builder(
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: const EdgeInsets.all(0),
-                              child: Container(
-                                height: 300,
-                                width: 400,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(
-                                    15,
-                                  ),
-                                  image: DecorationImage(
-                                    image: NetworkImage(widget.product.img!),
-                                  ),
-                                ),
+                child: isLoading == true
+                    ? Center(child: CircularProgressIndicator())
+                    : SingleChildScrollView(
+                        child: Form(
+                        key: _formKey,
+                        child: Column(
+                          // mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              height: 300,
+                              width: 400,
+                              child: PageView.builder(
+                                itemBuilder: (context, index) {
+                                  return Padding(
+                                    padding: const EdgeInsets.all(0),
+                                    child: Container(
+                                      height: 300,
+                                      width: 400,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(
+                                          15,
+                                        ),
+                                        image: DecorationImage(
+                                          image:
+                                              NetworkImage(widget.product.img!),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
-                            );
-                          },
-                        ),
-                      ),
+                            ),
 
-                      // indicator
+                            // indicator
 
-                      SizedBox(
-                        height: size.height / 25,
-                        width: size.width,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          // children: [
-                          //   for (int i = 0;
-                          //       i < product.;
-                          //       i++)
-                          //     indicator(size, false)
-                          // ],
-                        ),
-                      ),
-
-                      SizedBox(
-                        height: size.height / 25,
-                      ),
-
-                      SizedBox(
-                        width: size.width / 1.2,
-                        child: Text(
-                          widget.product.name!,
-                          style: const TextStyle(
-                            fontSize: 24,
-                            color: Color.fromARGB(255, 0, 0, 0),
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-
-                      SizedBox(
-                        height: size.height / 35,
-                      ),
-
-                      SizedBox(
-                        width: size.width / 1.2,
-                        child: RichText(
-                          text: TextSpan(
-                            // text: "${widget.product.price}",
-                            children: [
-                              TextSpan(
-                                text: "\$${widget.product.price}",
-                                style: TextStyle(
-                                  fontSize: 19,
-                                  color: Colors.grey[800],
-                                  decoration: TextDecoration.none,
-                                ),
+                            SizedBox(
+                              height: size.height / 25,
+                              width: size.width,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                // children: [
+                                //   for (int i = 0;
+                                //       i < product.;
+                                //       i++)
+                                //     indicator(size, false)
+                                // ],
                               ),
-                              TextSpan(
-                                // text: " ${product.price}% off",
+                            ),
+
+                            SizedBox(
+                              height: size.height / 25,
+                            ),
+
+                            SizedBox(
+                              width: size.width / 1.2,
+                              child: Text(
+                                widget.product.name!,
                                 style: const TextStyle(
-                                  fontSize: 19,
-                                  color: Colors.green,
-                                  decoration: TextDecoration.none,
+                                  fontSize: 24,
+                                  color: Color.fromARGB(255, 0, 0, 0),
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                      ),
-
-                      SizedBox(
-                        height: size.height / 25,
-                      ),
-
-                      SizedBox(
-                        width: size.width / 1.2,
-                        child: const Text(
-                          "Description",
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-
-                      SizedBox(
-                        height: size.height / 50,
-                      ),
-
-                      SizedBox(
-                        width: size.width / 1.2,
-                        child: Text(
-                          widget.product.description!,
-                          style: TextStyle(
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: size.height / 40,
-                      ),
-
-                      SizedBox(
-                        width: size.width / 1.2,
-                        child: const Text(
-                          "Location",
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-
-                      SizedBox(
-                        height: size.height / 80,
-                      ),
-
-                      SizedBox(
-                        width: size.width / 1.2,
-                        child: Text(
-                          widget.product.location!,
-                          style: TextStyle(
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: size.height / 25,
-                      ),
-                      SizedBox(
-                        width: size.width / 1.2,
-                        child: const Text(
-                          "Date",
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-
-                      SizedBox(
-                        height: size.height / 80,
-                      ),
-
-                      SizedBox(
-                        width: size.width / 1.2,
-                        child: Text(
-                          widget.product.date!,
-                          style: TextStyle(
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                      // ListTile(
-                      //   onTap: () {},
-                      //   title: Text("See Reviews"),
-                      //   trailing: Icon(Icons.arrow_forward_ios),
-                      //   leading: Icon(Icons.star),
-                      // ),
-                      SizedBox(
-                        height: size.height / 80,
-                      ),
-                      SizedBox(
-                        width: size.width / 1.2,
-                        child: const Text(
-                          "Authorization / Fees",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-
-                      SizedBox(
-                        height: size.height / 80,
-                      ),
-
-                      SizedBox(
-                        width: size.width / 1.2,
-                        child: Text(
-                          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
-                          style: TextStyle(
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 100,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Text(
-                          'Signature',
-                          textAlign: TextAlign.start,
-                          style: ralewayStyle.copyWith(
-                              fontSize: 25.0,
-                              color: Color.fromARGB(255, 0, 0, 0),
-                              fontWeight: FontWeight.w500,
-                              fontFamily: 'Caramel'),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10.0),
-                        child: Container(
-                          width: 350,
-                          child: SfSignaturePad(
-                            key: key,
-                            backgroundColor: Colors.grey.shade400,
-                            strokeColor: c,
-                            minimumStrokeWidth: 10,
-                            maximumStrokeWidth: min,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: size.height / 80,
-                      ),
-                      ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.blueDarkColor),
-                          onPressed: () {
-                            key.currentState!.clear();
-                          },
-                          child: Text('Clear')),
-                      SizedBox(
-                        height: size.height / 80,
-                      ),
-                      Container(
-                          width: 325,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Checkbox(
-                                  value: isChecked,
-                                  onChanged: (bool? newValue) {
-                                    setState(() {
-                                      isChecked = newValue!;
-                                    });
-                                  }),
-                              Text(
-                                'I have read the agreement and I accept it',
-                                style: TextStyle(fontSize: 16),
-                              )
-                            ],
-                          )),
-                      SizedBox(
-                        height: size.height / 100,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 20, right: 290),
-                        child: Text(
-                          'Name',
-                          textAlign: TextAlign.start,
-                          style: ralewayStyle.copyWith(
-                            fontSize: 16.0,
-                            color: Color.fromARGB(255, 0, 0, 0),
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10.0),
-                        child: Container(
-                          height: 50.0,
-                          width: 345,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16.0),
-                            color: AppColors.whiteColor,
-                          ),
-                          child: TextFormField(
-                            // keyboardType: TextInputType.multiline,
-                            // minLines: 2, // <-- SEE HERE
-                            // maxLines: 2,
-                            validator: (value) {
-                              return value!.isEmpty
-                                  ? 'Client Name Required'
-                                  : null;
-                            },
-                            controller: _itemNameController,
-
-                            // onSaved: (value) {
-                            //   productData['Description'] = value!;
-                            // },
-                            // controller: _emailTextController,
-                            style: ralewayStyle.copyWith(
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.blueDarkColor,
-                              fontSize: 16.0,
                             ),
-                            decoration: InputDecoration(
-                              // border: InputBorder.none,
-                              border: OutlineInputBorder(),
 
-                              // prefixIcon: IconButton(
-                              //     onPressed: () {},
-                              //     icon: Image.asset(AppIcons.emailIcon)),
-                              contentPadding:
-                                  const EdgeInsets.only(top: 5.0, left: 12.0),
-                              hintText: 'Name',
-                              hintStyle: ralewayStyle.copyWith(
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.blueDarkColor.withOpacity(0.5),
-                                fontSize: 16.0,
-                              ),
+                            SizedBox(
+                              height: size.height / 35,
                             ),
-                          ),
-                        ),
-                      ),
-                      // SizedBox(
-                      //   height: size.height / 100,
-                      // ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 20, right: 300),
-                        child: Text(
-                          'Date',
-                          textAlign: TextAlign.start,
-                          style: ralewayStyle.copyWith(
-                            fontSize: 16.0,
-                            color: Color.fromARGB(255, 0, 0, 0),
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10.0),
-                        child: Container(
-                          height: 50.0,
-                          width: 345,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16.0),
-                            color: AppColors.whiteColor,
-                          ),
-                          child: TextFormField(
-                            // keyboardType: TextInputType.multiline,
-                            // minLines: 2, // <-- SEE HERE
-                            // maxLines: 2,
-                            validator: (value) {
-                              return value!.isEmpty ? 'Date Required' : null;
-                            },
-                            controller: _itemDateController,
 
-                            // onSaved: (value) {
-                            //   productData['Description'] = value!;
-                            // },
-                            // controller: _emailTextController,
-                            style: ralewayStyle.copyWith(
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.blueDarkColor,
-                              fontSize: 16.0,
-                            ),
-                            decoration: InputDecoration(
-                              // border: InputBorder.none,
-                              border: OutlineInputBorder(),
-
-                              // prefixIcon: IconButton(
-                              //     onPressed: () {},
-                              //     icon: Image.asset(AppIcons.emailIcon)),
-                              contentPadding:
-                                  const EdgeInsets.only(top: 5.0, left: 12.0),
-                              hintText: 'Date',
-                              hintStyle: ralewayStyle.copyWith(
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.blueDarkColor.withOpacity(0.5),
-                                fontSize: 16.0,
-                              ),
-                            ),
-                            onTap: () {
-                              _selectDate(context);
-                            },
-                          ),
-                        ),
-                      ),
-                      // SizedBox(
-                      //   height: size.height / 100,
-                      // ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 20, right: 270),
-                        child: Text(
-                          'Location',
-                          textAlign: TextAlign.start,
-                          style: ralewayStyle.copyWith(
-                            fontSize: 16.0,
-                            color: Color.fromARGB(255, 0, 0, 0),
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10.0),
-                        child: Container(
-                          height: 50.0,
-                          width: 345,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16.0),
-                            color: AppColors.whiteColor,
-                          ),
-                          child: TextFormField(
-                            // keyboardType: TextInputType.multiline,
-                            // minLines: 2, // <-- SEE HERE
-                            // maxLines: 2,
-                            validator: (value) {
-                              return value!.isEmpty
-                                  ? 'Location Required'
-                                  : null;
-                            },
-                            controller: _itemLocationController,
-
-                            style: ralewayStyle.copyWith(
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.blueDarkColor,
-                              fontSize: 16.0,
-                            ),
-                            decoration: InputDecoration(
-                              // border: InputBorder.none,
-                              border: OutlineInputBorder(),
-
-                              // prefixIcon: IconButton(
-                              //     onPressed: () {},
-                              //     icon: Image.asset(AppIcons.emailIcon)),
-                              contentPadding:
-                                  const EdgeInsets.only(top: 5.0, left: 12.0),
-                              hintText: 'Location',
-                              hintStyle: ralewayStyle.copyWith(
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.blueDarkColor.withOpacity(0.5),
-                                fontSize: 16.0,
-                              ),
-                            ),
-                            onTap: () {
-                              userLoc();
-                            },
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: size.height / 80,
-                      ),
-                      SizedBox(
-                        width: size.width / 1.2,
-                        child: const Text(
-                          "Payment",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                      //=======================================================//
-                      // PaymentOptionPage(),
-
-                      Center(
-                        child: SizedBox(
-                          width: 345,
-                          child: Column(
-                            children: <Widget>[
-                              SizedBox(
-                                height: 15,
-                              ),
-                              Container(
-                                height: 48,
-                                decoration: BoxDecoration(
-                                    color: Color(0xFF292639),
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(7.0),
-                                  child: TabBar(
-                                      controller: _tabController,
-                                      indicator: BoxDecoration(
-                                          color:
-                                              Color.fromARGB(255, 19, 38, 94),
-                                          borderRadius:
-                                              BorderRadius.circular(8)),
-                                      tabs: [
-                                        Tab(
-                                          text: 'Partial Payment ',
-                                        ),
-                                        Tab(
-                                          text: "Full Payment ",
-                                        )
-                                      ]),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 150,
-                                child: TabBarView(
-                                    controller: _tabController,
-                                    children: [
-                                      Container(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            TextFormField(
-                                              readOnly: true,
-                                              validator: (value) {
-                                                return value!.isEmpty
-                                                    ? 'Put 10% of the product cost as patial payment'
-                                                    : null;
-                                              },
-                                              // controller: _itemLocationController,
-                                              controller:
-                                                  _itemPartialPayController,
-
-                                              style: ralewayStyle.copyWith(
-                                                fontWeight: FontWeight.w400,
-                                                color: AppColors.blueDarkColor,
-                                                fontSize: 16.0,
-                                              ),
-                                              decoration: InputDecoration(
-                                                // border: InputBorder.none,
-                                                border: OutlineInputBorder(),
-
-                                                contentPadding:
-                                                    const EdgeInsets.only(
-                                                        top: 5.0, left: 12.0),
-                                                hintText:
-                                                    'Put 10% of the product cost as patial payment',
-                                                hintStyle:
-                                                    ralewayStyle.copyWith(
-                                                  fontWeight: FontWeight.w400,
-                                                  color: AppColors.blueDarkColor
-                                                      .withOpacity(0.5),
-                                                  fontSize: 16.0,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Container(
-                                        // child: Column(
-                                        //   mainAxisAlignment:
-                                        //       MainAxisAlignment.spaceEvenly,
-                                        //   children: [
-                                        //     Text(
-                                        //         'Email Address : etransfer@backers.ca'),
-                                        //   ],
-                                        // ),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            TextFormField(
-                                              readOnly: true,
-                                              validator: (value) {
-                                                return value!.isEmpty
-                                                    ? ' 10% as patial payment'
-                                                    : null;
-                                              },
-                                              // controller: _itemLocationController,
-                                              controller:
-                                                  _itemFullPayController,
-
-                                              style: ralewayStyle.copyWith(
-                                                fontWeight: FontWeight.w400,
-                                                color: AppColors.blueDarkColor,
-                                                fontSize: 16.0,
-                                              ),
-                                              decoration: InputDecoration(
-                                                // border: InputBorder.none,
-                                                border: OutlineInputBorder(),
-
-                                                contentPadding:
-                                                    const EdgeInsets.only(
-                                                        top: 5.0, left: 12.0),
-                                                hintText: 'Pay in Full ',
-                                                hintStyle:
-                                                    ralewayStyle.copyWith(
-                                                  fontWeight: FontWeight.w400,
-                                                  color: AppColors.blueDarkColor
-                                                      .withOpacity(0.5),
-                                                  fontSize: 16.0,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      )
-                                    ]),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-
-                      //======================================================//
-
-                      //=====================================================//
-                      Center(
-                        child: SizedBox(
-                            width: 345,
-                            child: DefaultTabController(
-                              length: 2,
-                              child: Column(
-                                children: <Widget>[
-                                  SizedBox(
-                                    height: 15,
-                                  ),
-                                  Container(
-                                    height: 48,
-                                    decoration: BoxDecoration(
-                                        color: Color(0xFF292639),
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(7.0),
-                                      child: const TabBar(
-                                        tabs: [
-                                          Tab(
-                                            text: 'EFT ',
-                                          ),
-                                          Tab(
-                                            text: 'eTransfer ',
-                                          ),
-                                        ],
+                            SizedBox(
+                              width: size.width / 1.2,
+                              child: RichText(
+                                text: TextSpan(
+                                  // text: "${widget.product.price}",
+                                  children: [
+                                    TextSpan(
+                                      text: "\$${widget.product.price}",
+                                      style: TextStyle(
+                                        fontSize: 19,
+                                        color: Colors.grey[800],
+                                        decoration: TextDecoration.none,
                                       ),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    height: 300,
-                                    child: TabBarView(
-                                      children: [
-                                        Container(
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            children: [
-                                              TextFormField(
-                                                validator: (value) {
-                                                  return value!.isEmpty
-                                                      ? 'Account Number Required'
-                                                      : null;
-                                                },
-
-                                                // controller: _itemLocationController,
-                                                controller:
-                                                    _itemAccountNoController,
-
-                                                style: ralewayStyle.copyWith(
-                                                  fontWeight: FontWeight.w400,
-                                                  color:
-                                                      AppColors.blueDarkColor,
-                                                  fontSize: 16.0,
-                                                ),
-                                                decoration: InputDecoration(
-                                                  // border: InputBorder.none,
-                                                  border: OutlineInputBorder(),
-
-                                                  contentPadding:
-                                                      const EdgeInsets.only(
-                                                          top: 5.0, left: 12.0),
-                                                  hintText: 'Account Number',
-                                                  hintStyle:
-                                                      ralewayStyle.copyWith(
-                                                    fontWeight: FontWeight.w400,
-                                                    color: AppColors
-                                                        .blueDarkColor
-                                                        .withOpacity(0.5),
-                                                    fontSize: 16.0,
-                                                  ),
-                                                ),
-                                              ),
-                                              TextFormField(
-                                                validator: (value) {
-                                                  return value!.isEmpty
-                                                      ? 'Institution No Required'
-                                                      : null;
-                                                },
-                                                controller:
-                                                    _itemInstitutionNoController,
-                                                style: ralewayStyle.copyWith(
-                                                  fontWeight: FontWeight.w400,
-                                                  color:
-                                                      AppColors.blueDarkColor,
-                                                  fontSize: 16.0,
-                                                ),
-                                                decoration: InputDecoration(
-                                                  // border: InputBorder.none,
-                                                  border: OutlineInputBorder(),
-
-                                                  contentPadding:
-                                                      const EdgeInsets.only(
-                                                          top: 5.0, left: 12.0),
-                                                  hintText: 'Institution No',
-                                                  hintStyle:
-                                                      ralewayStyle.copyWith(
-                                                    fontWeight: FontWeight.w400,
-                                                    color: AppColors
-                                                        .blueDarkColor
-                                                        .withOpacity(0.5),
-                                                    fontSize: 16.0,
-                                                  ),
-                                                ),
-                                              ),
-                                              TextFormField(
-                                                validator: (value) {
-                                                  return value!.isEmpty
-                                                      ? 'Transit No Required'
-                                                      : null;
-                                                },
-                                                controller:
-                                                    _itemTransitNoController,
-                                                style: ralewayStyle.copyWith(
-                                                  fontWeight: FontWeight.w400,
-                                                  color:
-                                                      AppColors.blueDarkColor,
-                                                  fontSize: 16.0,
-                                                ),
-                                                decoration: InputDecoration(
-                                                  // border: InputBorder.none,
-                                                  border: OutlineInputBorder(),
-
-                                                  contentPadding:
-                                                      const EdgeInsets.only(
-                                                          top: 5.0, left: 12.0),
-                                                  hintText: 'Transit No',
-                                                  hintStyle:
-                                                      ralewayStyle.copyWith(
-                                                    fontWeight: FontWeight.w400,
-                                                    color: AppColors
-                                                        .blueDarkColor
-                                                        .withOpacity(0.5),
-                                                    fontSize: 16.0,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-
-                                        Container(
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            children: [
-                                              Text(
-                                                  'Email Address : etransfer@backers.ca'),
-                                            ],
-                                          ),
-                                        ),
-                                        // Icon(Icons.directions_bike),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )),
-                      ),
-
-                      //======================================================//
-
-                      //=======================================================//
-
-                      SizedBox(
-                        height: size.height / 80,
-                      ),
-                      SizedBox(
-                        height: size.height / 100,
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      // Container(
-                      //   height: 50.0,
-                      //   width: 345,
-                      //   child: ElevatedButton(
-                      //     child: const Text('Confirm'),
-                      //     style: ElevatedButton.styleFrom(
-                      //         backgroundColor: AppColors.blueDarkColor),
-                      //     onPressed: () {
-                      //       UpdateAgreement();
-                      //     },
-                      //   ),
-                      // ),
-                      Container(
-                        height: 50.0,
-                        width: 345,
-                        child: TextButton(
-                          onPressed: () {
-                            // Validate returns true if the form is valid, or false otherwise.
-                            if (_formKey.currentState!.validate()) {
-                              // If the form is valid, display a snackbar. In the real world,
-                              // you'd often call a server or save the information in a database.
-                              showDialog<String>(
-                                context: context,
-                                builder: (BuildContext context) => AlertDialog(
-                                  // title: const Text('AlertDialog Title'),
-                                  content: const Text(
-                                      'To confirm click confirm button'),
-
-                                  actions: <Widget>[
-                                    //
-                                    Container(
-                                      height: 50.0,
-                                      width: 345,
-                                      child: ElevatedButton(
-                                        child: const Text('Confirm'),
-                                        style: ElevatedButton.styleFrom(
-                                            backgroundColor:
-                                                AppColors.blueDarkColor),
-                                        onPressed: () {
-                                          UpdateAgreement();
-                                        },
+                                    TextSpan(
+                                      // text: " ${product.price}% off",
+                                      style: const TextStyle(
+                                        fontSize: 19,
+                                        color: Colors.green,
+                                        decoration: TextDecoration.none,
                                       ),
                                     ),
                                   ],
                                 ),
-                              );
-                            }
-                          },
-                          child: const Text('Confirm'),
-                          style: ElevatedButton.styleFrom(
-                              foregroundColor: Colors.white,
-                              backgroundColor: AppColors.blueDarkColor),
-                        ),
-                      ),
+                              ),
+                            ),
 
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      // Container(
-                      //   height: 50.0,
-                      //   width: 345,
-                      //   child: ElevatedButton(
-                      //     child: const Text('Export to PDF'),
-                      //     style: ElevatedButton.styleFrom(
-                      //         backgroundColor: AppColors.blueDarkColor),
-                      //     onPressed: () {
-                      //       // Navigator.push(
-                      //       //   context,
-                      //       //   MaterialPageRoute(builder: (context) => saveData()),
-                      //       // );
-                      //     },
-                      //   ),
-                      // ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                    ],
-                  ),
-                )),
+                            SizedBox(
+                              height: size.height / 25,
+                            ),
+
+                            SizedBox(
+                              width: size.width / 1.2,
+                              child: const Text(
+                                "Description",
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+
+                            SizedBox(
+                              height: size.height / 50,
+                            ),
+
+                            SizedBox(
+                              width: size.width / 1.2,
+                              child: Text(
+                                widget.product.description!,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: size.height / 40,
+                            ),
+
+                            SizedBox(
+                              width: size.width / 1.2,
+                              child: const Text(
+                                "Location",
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+
+                            SizedBox(
+                              height: size.height / 80,
+                            ),
+
+                            SizedBox(
+                              width: size.width / 1.2,
+                              child: Text(
+                                widget.product.location!,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: size.height / 25,
+                            ),
+                            SizedBox(
+                              width: size.width / 1.2,
+                              child: const Text(
+                                "Date",
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+
+                            SizedBox(
+                              height: size.height / 80,
+                            ),
+
+                            SizedBox(
+                              width: size.width / 1.2,
+                              child: Text(
+                                widget.product.date!,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                            // ListTile(
+                            //   onTap: () {},
+                            //   title: Text("See Reviews"),
+                            //   trailing: Icon(Icons.arrow_forward_ios),
+                            //   leading: Icon(Icons.star),
+                            // ),
+                            SizedBox(
+                              height: size.height / 80,
+                            ),
+                            SizedBox(
+                              width: size.width / 1.2,
+                              child: const Text(
+                                "Authorization / Fees",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+
+                            SizedBox(
+                              height: size.height / 80,
+                            ),
+
+                            SizedBox(
+                              width: size.width / 1.2,
+                              child: Text(
+                                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 100,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: Text(
+                                'Signature',
+                                textAlign: TextAlign.start,
+                                style: ralewayStyle.copyWith(
+                                    fontSize: 25.0,
+                                    color: Color.fromARGB(255, 0, 0, 0),
+                                    fontWeight: FontWeight.w500,
+                                    fontFamily: 'Caramel'),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 10.0),
+                              child: Container(
+                                width: 350,
+                                child: SfSignaturePad(
+                                  key: key,
+                                  backgroundColor: Colors.grey.shade400,
+                                  strokeColor: c,
+                                  minimumStrokeWidth: 10,
+                                  maximumStrokeWidth: min,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: size.height / 80,
+                            ),
+                            ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColors.blueDarkColor),
+                                onPressed: () {
+                                  key.currentState!.clear();
+                                },
+                                child: Text('Clear')),
+                            SizedBox(
+                              height: size.height / 80,
+                            ),
+                            Container(
+                                width: 325,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Checkbox(
+                                        value: isChecked,
+                                        onChanged: (bool? newValue) {
+                                          setState(() {
+                                            isChecked = newValue!;
+                                          });
+                                        }),
+                                    Text(
+                                      'I have read the agreement and I accept it',
+                                      style: TextStyle(fontSize: 16),
+                                    )
+                                  ],
+                                )),
+                            SizedBox(
+                              height: size.height / 100,
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 20, right: 290),
+                              child: Text(
+                                'Name',
+                                textAlign: TextAlign.start,
+                                style: ralewayStyle.copyWith(
+                                  fontSize: 16.0,
+                                  color: Color.fromARGB(255, 0, 0, 0),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 10.0),
+                              child: Container(
+                                height: 50.0,
+                                width: 345,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(16.0),
+                                  color: AppColors.whiteColor,
+                                ),
+                                child: TextFormField(
+                                  // keyboardType: TextInputType.multiline,
+                                  // minLines: 2, // <-- SEE HERE
+                                  // maxLines: 2,
+                                  validator: (value) {
+                                    return value!.isEmpty
+                                        ? 'Client Name Required'
+                                        : null;
+                                  },
+                                  controller: _itemNameController,
+
+                                  // onSaved: (value) {
+                                  //   productData['Description'] = value!;
+                                  // },
+                                  // controller: _emailTextController,
+                                  style: ralewayStyle.copyWith(
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColors.blueDarkColor,
+                                    fontSize: 16.0,
+                                  ),
+                                  decoration: InputDecoration(
+                                    // border: InputBorder.none,
+                                    border: OutlineInputBorder(),
+
+                                    // prefixIcon: IconButton(
+                                    //     onPressed: () {},
+                                    //     icon: Image.asset(AppIcons.emailIcon)),
+                                    contentPadding: const EdgeInsets.only(
+                                        top: 5.0, left: 12.0),
+                                    hintText: 'Name',
+                                    hintStyle: ralewayStyle.copyWith(
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.blueDarkColor
+                                          .withOpacity(0.5),
+                                      fontSize: 16.0,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            // SizedBox(
+                            //   height: size.height / 100,
+                            // ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 20, right: 300),
+                              child: Text(
+                                'Date',
+                                textAlign: TextAlign.start,
+                                style: ralewayStyle.copyWith(
+                                  fontSize: 16.0,
+                                  color: Color.fromARGB(255, 0, 0, 0),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 10.0),
+                              child: Container(
+                                height: 50.0,
+                                width: 345,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(16.0),
+                                  color: AppColors.whiteColor,
+                                ),
+                                child: TextFormField(
+                                  // keyboardType: TextInputType.multiline,
+                                  // minLines: 2, // <-- SEE HERE
+                                  // maxLines: 2,
+                                  validator: (value) {
+                                    return value!.isEmpty
+                                        ? 'Date Required'
+                                        : null;
+                                  },
+                                  controller: _itemDateController,
+
+                                  // onSaved: (value) {
+                                  //   productData['Description'] = value!;
+                                  // },
+                                  // controller: _emailTextController,
+                                  style: ralewayStyle.copyWith(
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColors.blueDarkColor,
+                                    fontSize: 16.0,
+                                  ),
+                                  decoration: InputDecoration(
+                                    // border: InputBorder.none,
+                                    border: OutlineInputBorder(),
+
+                                    // prefixIcon: IconButton(
+                                    //     onPressed: () {},
+                                    //     icon: Image.asset(AppIcons.emailIcon)),
+                                    contentPadding: const EdgeInsets.only(
+                                        top: 5.0, left: 12.0),
+                                    hintText: 'Date',
+                                    hintStyle: ralewayStyle.copyWith(
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.blueDarkColor
+                                          .withOpacity(0.5),
+                                      fontSize: 16.0,
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    _selectDate(context);
+                                  },
+                                ),
+                              ),
+                            ),
+                            // SizedBox(
+                            //   height: size.height / 100,
+                            // ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 20, right: 270),
+                              child: Text(
+                                'Location',
+                                textAlign: TextAlign.start,
+                                style: ralewayStyle.copyWith(
+                                  fontSize: 16.0,
+                                  color: Color.fromARGB(255, 0, 0, 0),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 10.0),
+                              child: Container(
+                                height: 50.0,
+                                width: 345,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(16.0),
+                                  color: AppColors.whiteColor,
+                                ),
+                                child: TextFormField(
+                                  // keyboardType: TextInputType.multiline,
+                                  // minLines: 2, // <-- SEE HERE
+                                  // maxLines: 2,
+                                  validator: (value) {
+                                    return value!.isEmpty
+                                        ? 'Location Required'
+                                        : null;
+                                  },
+                                  controller: _itemLocationController,
+
+                                  style: ralewayStyle.copyWith(
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColors.blueDarkColor,
+                                    fontSize: 16.0,
+                                  ),
+                                  decoration: InputDecoration(
+                                    // border: InputBorder.none,
+                                    border: OutlineInputBorder(),
+
+                                    // prefixIcon: IconButton(
+                                    //     onPressed: () {},
+                                    //     icon: Image.asset(AppIcons.emailIcon)),
+                                    contentPadding: const EdgeInsets.only(
+                                        top: 5.0, left: 12.0),
+                                    hintText: 'Location',
+                                    hintStyle: ralewayStyle.copyWith(
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.blueDarkColor
+                                          .withOpacity(0.5),
+                                      fontSize: 16.0,
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    userLoc();
+                                  },
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: size.height / 80,
+                            ),
+                            SizedBox(
+                              width: size.width / 1.2,
+                              child: const Text(
+                                "Payment",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                            //=======================================================//
+                            // PaymentOptionPage(),
+
+                            Center(
+                              child: SizedBox(
+                                width: 345,
+                                child: Column(
+                                  children: <Widget>[
+                                    SizedBox(
+                                      height: 15,
+                                    ),
+                                    Container(
+                                      height: 48,
+                                      decoration: BoxDecoration(
+                                          color: Color(0xFF292639),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(7.0),
+                                        child: TabBar(
+                                            controller: _tabController,
+                                            indicator: BoxDecoration(
+                                                color: Color.fromARGB(
+                                                    255, 19, 38, 94),
+                                                borderRadius:
+                                                    BorderRadius.circular(8)),
+                                            tabs: [
+                                              Tab(
+                                                text: 'Partial Payment ',
+                                              ),
+                                              Tab(
+                                                text: "Full Payment ",
+                                              )
+                                            ]),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 150,
+                                      child: TabBarView(
+                                          controller: _tabController,
+                                          children: [
+                                            Container(
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                children: [
+                                                  TextFormField(
+                                                    readOnly: true,
+                                                    validator: (value) {
+                                                      return value!.isEmpty
+                                                          ? 'Put 10% of the product cost as patial payment'
+                                                          : null;
+                                                    },
+                                                    // controller: _itemLocationController,
+                                                    controller:
+                                                        _itemPartialPayController,
+
+                                                    style:
+                                                        ralewayStyle.copyWith(
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color: AppColors
+                                                          .blueDarkColor,
+                                                      fontSize: 16.0,
+                                                    ),
+                                                    decoration: InputDecoration(
+                                                      // border: InputBorder.none,
+                                                      border:
+                                                          OutlineInputBorder(),
+
+                                                      contentPadding:
+                                                          const EdgeInsets.only(
+                                                              top: 5.0,
+                                                              left: 12.0),
+                                                      hintText:
+                                                          'Put 10% of the product cost as patial payment',
+                                                      hintStyle:
+                                                          ralewayStyle.copyWith(
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color: AppColors
+                                                            .blueDarkColor
+                                                            .withOpacity(0.5),
+                                                        fontSize: 16.0,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Container(
+                                              // child: Column(
+                                              //   mainAxisAlignment:
+                                              //       MainAxisAlignment.spaceEvenly,
+                                              //   children: [
+                                              //     Text(
+                                              //         'Email Address : etransfer@backers.ca'),
+                                              //   ],
+                                              // ),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                children: [
+                                                  TextFormField(
+                                                    readOnly: true,
+                                                    validator: (value) {
+                                                      return value!.isEmpty
+                                                          ? ' 10% as patial payment'
+                                                          : null;
+                                                    },
+                                                    // controller: _itemLocationController,
+                                                    controller:
+                                                        _itemFullPayController,
+
+                                                    style:
+                                                        ralewayStyle.copyWith(
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color: AppColors
+                                                          .blueDarkColor,
+                                                      fontSize: 16.0,
+                                                    ),
+                                                    decoration: InputDecoration(
+                                                      // border: InputBorder.none,
+                                                      border:
+                                                          OutlineInputBorder(),
+
+                                                      contentPadding:
+                                                          const EdgeInsets.only(
+                                                              top: 5.0,
+                                                              left: 12.0),
+                                                      hintText: 'Pay in Full ',
+                                                      hintStyle:
+                                                          ralewayStyle.copyWith(
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color: AppColors
+                                                            .blueDarkColor
+                                                            .withOpacity(0.5),
+                                                        fontSize: 16.0,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                          ]),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+
+                            //======================================================//
+
+                            //=====================================================//
+                            Center(
+                              child: SizedBox(
+                                  width: 345,
+                                  child: DefaultTabController(
+                                    length: 2,
+                                    child: Column(
+                                      children: <Widget>[
+                                        SizedBox(
+                                          height: 15,
+                                        ),
+                                        Container(
+                                          height: 48,
+                                          decoration: BoxDecoration(
+                                              color: Color(0xFF292639),
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(7.0),
+                                            child: const TabBar(
+                                              tabs: [
+                                                Tab(
+                                                  text: 'EFT ',
+                                                ),
+                                                Tab(
+                                                  text: 'eTransfer ',
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 300,
+                                          child: TabBarView(
+                                            children: [
+                                              Container(
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  children: [
+                                                    TextFormField(
+                                                      validator: (value) {
+                                                        return value!.isEmpty
+                                                            ? 'Account Number Required'
+                                                            : null;
+                                                      },
+
+                                                      // controller: _itemLocationController,
+                                                      controller:
+                                                          _itemAccountNoController,
+
+                                                      style:
+                                                          ralewayStyle.copyWith(
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color: AppColors
+                                                            .blueDarkColor,
+                                                        fontSize: 16.0,
+                                                      ),
+                                                      decoration:
+                                                          InputDecoration(
+                                                        // border: InputBorder.none,
+                                                        border:
+                                                            OutlineInputBorder(),
+
+                                                        contentPadding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                top: 5.0,
+                                                                left: 12.0),
+                                                        hintText:
+                                                            'Account Number',
+                                                        hintStyle: ralewayStyle
+                                                            .copyWith(
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color: AppColors
+                                                              .blueDarkColor
+                                                              .withOpacity(0.5),
+                                                          fontSize: 16.0,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    TextFormField(
+                                                      validator: (value) {
+                                                        return value!.isEmpty
+                                                            ? 'Institution No Required'
+                                                            : null;
+                                                      },
+                                                      controller:
+                                                          _itemInstitutionNoController,
+                                                      style:
+                                                          ralewayStyle.copyWith(
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color: AppColors
+                                                            .blueDarkColor,
+                                                        fontSize: 16.0,
+                                                      ),
+                                                      decoration:
+                                                          InputDecoration(
+                                                        // border: InputBorder.none,
+                                                        border:
+                                                            OutlineInputBorder(),
+
+                                                        contentPadding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                top: 5.0,
+                                                                left: 12.0),
+                                                        hintText:
+                                                            'Institution No',
+                                                        hintStyle: ralewayStyle
+                                                            .copyWith(
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color: AppColors
+                                                              .blueDarkColor
+                                                              .withOpacity(0.5),
+                                                          fontSize: 16.0,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    TextFormField(
+                                                      validator: (value) {
+                                                        return value!.isEmpty
+                                                            ? 'Transit No Required'
+                                                            : null;
+                                                      },
+                                                      controller:
+                                                          _itemTransitNoController,
+                                                      style:
+                                                          ralewayStyle.copyWith(
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color: AppColors
+                                                            .blueDarkColor,
+                                                        fontSize: 16.0,
+                                                      ),
+                                                      decoration:
+                                                          InputDecoration(
+                                                        // border: InputBorder.none,
+                                                        border:
+                                                            OutlineInputBorder(),
+
+                                                        contentPadding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                top: 5.0,
+                                                                left: 12.0),
+                                                        hintText: 'Transit No',
+                                                        hintStyle: ralewayStyle
+                                                            .copyWith(
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color: AppColors
+                                                              .blueDarkColor
+                                                              .withOpacity(0.5),
+                                                          fontSize: 16.0,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+
+                                              Container(
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  children: [
+                                                    Text(
+                                                        'Email Address : etransfer@backers.ca'),
+                                                  ],
+                                                ),
+                                              ),
+                                              // Icon(Icons.directions_bike),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )),
+                            ),
+
+                            //======================================================//
+
+                            //=======================================================//
+
+                            SizedBox(
+                              height: size.height / 80,
+                            ),
+                            SizedBox(
+                              height: size.height / 100,
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            // Container(
+                            //   height: 50.0,
+                            //   width: 345,
+                            //   child: ElevatedButton(
+                            //     child: const Text('Confirm'),
+                            //     style: ElevatedButton.styleFrom(
+                            //         backgroundColor: AppColors.blueDarkColor),
+                            //     onPressed: () {
+                            //       UpdateAgreement();
+                            //     },
+                            //   ),
+                            // ),
+                            Container(
+                              height: 50.0,
+                              width: 345,
+                              child: TextButton(
+                                onPressed: () {
+                                  // Validate returns true if the form is valid, or false otherwise.
+                                  if (_formKey.currentState!.validate()) {
+                                    // If the form is valid, display a snackbar. In the real world,
+                                    // you'd often call a server or save the information in a database.
+                                    showDialog<String>(
+                                      context: context,
+                                      builder: (BuildContext context) =>
+                                          AlertDialog(
+                                        // title: const Text('AlertDialog Title'),
+                                        content: const Text(
+                                            'To confirm click confirm button'),
+
+                                        actions: <Widget>[
+                                          //
+                                          Container(
+                                            height: 50.0,
+                                            width: 345,
+                                            child: ElevatedButton(
+                                              child: const Text('Confirm'),
+                                              style: ElevatedButton.styleFrom(
+                                                  backgroundColor:
+                                                      AppColors.blueDarkColor),
+                                              onPressed: () {
+                                                UpdateAgreement();
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }
+                                },
+                                child: const Text('Confirm'),
+                                style: ElevatedButton.styleFrom(
+                                    foregroundColor: Colors.white,
+                                    backgroundColor: AppColors.blueDarkColor),
+                              ),
+                            ),
+
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            // Container(
+                            //   height: 50.0,
+                            //   width: 345,
+                            //   child: ElevatedButton(
+                            //     child: const Text('Export to PDF'),
+                            //     style: ElevatedButton.styleFrom(
+                            //         backgroundColor: AppColors.blueDarkColor),
+                            //     onPressed: () {
+                            //       // Navigator.push(
+                            //       //   context,
+                            //       //   MaterialPageRoute(builder: (context) => saveData()),
+                            //       // );
+                            //     },
+                            //   ),
+                            // ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                          ],
+                        ),
+                      )),
               ),
               // bottomNavigationBar: SizedBox(
               //   height: size.height / 14,
@@ -1245,9 +1305,9 @@ class _ProductOverviewState extends State<ProductOverview>
   }
 
   void UpdateAgreement() async {
-    setState(() {
-      isLoading = true;
-    });
+    // setState(() {
+    //   isLoading = true;
+    // });
 
     ui.Image image = await key.currentState!.toImage();
     final bytedata = await image.toByteData(format: ui.ImageByteFormat.png);
@@ -1259,9 +1319,9 @@ class _ProductOverviewState extends State<ProductOverview>
       img = decode;
     });
     uploadFile1(img);
-    setState(() {
-      isLoading = false;
-    });
+    // setState(() {
+    //   isLoading = false;
+    // });
     print('inside the update Agreement Function');
     // final User? user = auth.currentUser;
     // final uid = user?.uid;

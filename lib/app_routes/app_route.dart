@@ -136,14 +136,14 @@ class AppRoutes {
           return ShowAgreement(agreement);
         },
       ),
-      GoRoute(
-        name: RouteCon.signoff,
-        path: "/signoff",
-        builder: (context, state) {
-          Agreement agreement = state.extra as Agreement;
-          return SignOff(agreement);
-        },
-      ),
+      // GoRoute(
+      //   name: RouteCon.signoff,
+      //   path: "/signoff",
+      //   builder: (context, state) {
+      //     // Agreement agreement = state.extra as Agreement;
+      //     return SignOff(agreement);
+      //   },
+      // ),
       GoRoute(
         name: RouteCon.finalscreen,
         path: "/finalscreen",
