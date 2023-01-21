@@ -4,9 +4,12 @@ import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/src/widgets/container.dart';
+import 'package:flutter/src/widgets/framework.dart';
 import 'package:go_router/go_router.dart';
 import 'package:marketplace/app_routes/app_route.dart';
 import 'package:marketplace/screens/home_screen.dart';
+import 'package:marketplace/screens/signature_page.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 import 'dart:ui' as ui;
 import 'dart:convert';
@@ -71,6 +74,7 @@ class _ViewAgreementdsState extends State<ViewAgreementds> {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("Agreement accepted")));
       // Navigator.pop(context);
+      print("yyy $buyerId");
       FirebaseFirestore.instance
           .collection('users')
           .doc(buyerId)
@@ -78,9 +82,9 @@ class _ViewAgreementdsState extends State<ViewAgreementds> {
           .then((value) {
         // print("pppp ${value['deviceToken']}");
         sendPushMessageToWeb(
-            value['deviceToken'], 'your agreement aceepted', 'see details');
-        Navigator.pop(context);
-        GoRouter.of(context).goNamed(RouteCon.showagreement);
+            value['deviceToken'], 'new agreement recieved', 'detail ');
+        // Navigator.pop(context);
+        // GoRouter.of(context).goNamed(RouteCon.showagreement);
       });
       GoRouter.of(context).goNamed(RouteCon.signedagreements);
     });
@@ -88,7 +92,7 @@ class _ViewAgreementdsState extends State<ViewAgreementds> {
     return Future.value(uploadTask);
   }
 
-  void UpdateAgreement(String docId, String buyerId) async {
+  void updateAgreement(String docId, String buyerId) async {
     setState(() {
       isLoading = true;
     });
@@ -136,6 +140,7 @@ class _ViewAgreementdsState extends State<ViewAgreementds> {
 
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
     changeField();
   }
@@ -301,6 +306,9 @@ class _ViewAgreementdsState extends State<ViewAgreementds> {
                                                                     true
                                                                 ? null
                                                                 : () async {
+                                                                    // print(
+                                                                    //     "oooo ${data['buyer_id']}");
+
                                                                     showDialog(
                                                                         context:
                                                                             context,
@@ -330,7 +338,8 @@ class _ViewAgreementdsState extends State<ViewAgreementds> {
                                                                                         child: const Text('Confirm'),
                                                                                         style: ElevatedButton.styleFrom(backgroundColor: AppColors.blueDarkColor),
                                                                                         onPressed: () async {
-                                                                                          UpdateAgreement(data.id, data['buyer_d']);
+                                                                                          print("oooo ${data['buyer_id']}");
+                                                                                          updateAgreement(data.id, "${data['buyer_id']}");
                                                                                         },
                                                                                       ),
                                                                                     ),
