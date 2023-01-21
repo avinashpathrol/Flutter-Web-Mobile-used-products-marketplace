@@ -4,11 +4,9 @@ import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:go_router/go_router.dart';
 import 'package:marketplace/app_routes/app_route.dart';
-import 'package:marketplace/screens/signature_page.dart';
+import 'package:marketplace/screens/home_screen.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 import 'dart:ui' as ui;
 import 'dart:convert';
@@ -33,7 +31,8 @@ class _ViewAgreementdsState extends State<ViewAgreementds> {
 
   String signUrl = '';
 
-  Future<UploadTask?> uploadFile1(Uint8List? file, String docId) async {
+  Future<UploadTask?> uploadFile1(
+      Uint8List? file, String docId, String buyerId) async {
     // idGenerator();
     if (file == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -72,13 +71,24 @@ class _ViewAgreementdsState extends State<ViewAgreementds> {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("Agreement accepted")));
       // Navigator.pop(context);
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(buyerId)
+          .get()
+          .then((value) {
+        // print("pppp ${value['deviceToken']}");
+        sendPushMessageToWeb(
+            value['deviceToken'], 'your agreement aceepted', 'see details');
+        Navigator.pop(context);
+        GoRouter.of(context).goNamed(RouteCon.showagreement);
+      });
       GoRouter.of(context).goNamed(RouteCon.signedagreements);
     });
 
     return Future.value(uploadTask);
   }
 
-  void UpdateAgreement(String docId) async {
+  void UpdateAgreement(String docId, String buyerId) async {
     setState(() {
       isLoading = true;
     });
@@ -92,7 +102,7 @@ class _ViewAgreementdsState extends State<ViewAgreementds> {
     setState(() {
       img = decode;
     });
-    uploadFile1(img, docId);
+    uploadFile1(img, docId, buyerId);
     setState(() {
       isLoading = false;
     });
@@ -126,7 +136,6 @@ class _ViewAgreementdsState extends State<ViewAgreementds> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     changeField();
   }
@@ -321,7 +330,7 @@ class _ViewAgreementdsState extends State<ViewAgreementds> {
                                                                                         child: const Text('Confirm'),
                                                                                         style: ElevatedButton.styleFrom(backgroundColor: AppColors.blueDarkColor),
                                                                                         onPressed: () async {
-                                                                                          UpdateAgreement(data.id);
+                                                                                          UpdateAgreement(data.id, data['buyer_d']);
                                                                                         },
                                                                                       ),
                                                                                     ),
