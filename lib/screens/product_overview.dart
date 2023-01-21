@@ -139,15 +139,18 @@ class _ProductOverviewState extends State<ProductOverview>
       'partial_pay': _itemPartialPayController.text,
       'productId': widget.product.productId,
       'agreementStatus': false,
+      "agreementTitle": [
+        "Agreement received from ${_itemNameController.text} for ${widget.product.name}",
+        '"Agreement requested for ${_itemNameController.text} for ${widget.product.name}",'
+      ],
     }).then((value) {
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('Agreement Uploaded')));
       // sendPushMessage();
       print(value.id);
-      FirebaseFirestore.instance
-          .collection('Agreement')
-          .doc(value.id)
-          .update({'docId': value.id});
+      FirebaseFirestore.instance.collection('Agreement').doc(value.id).update({
+        'docId': value.id,
+      });
       setState(() {
         isLoading = false;
       });

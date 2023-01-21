@@ -317,8 +317,19 @@ class ShowAgreement extends StatelessWidget {
                                         color: Colors.green,
                                       ),
                                       MaterialButton(
-                                        onPressed: () {
+                                        onPressed: () async {
                                           Navigator.pop(context);
+                                          FirebaseFirestore.instance
+                                              .collection('Agreement')
+                                              .doc(agreement.docId)
+                                              .update({
+                                            "agreementStatus": false,
+                                            'signature': null
+                                          }).then((value) => ScaffoldMessenger
+                                                      .of(context)
+                                                  .showSnackBar(SnackBar(
+                                                      content: Text(
+                                                          "Agreement canceled"))));
                                         },
                                         child: Text("DISAGREE"),
                                         color: Colors.red,
