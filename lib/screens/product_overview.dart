@@ -1102,8 +1102,8 @@ class _ProductOverviewState extends State<ProductOverview>
                             context: context,
                             builder: (BuildContext context) => AlertDialog(
                               title: const Text('Confirm Agreement'),
-                              content: const Text(
-                                  'To confirm, click confirm button'),
+                              content:
+                                  const Text('You have signed the agreement?'),
                               actions: <Widget>[
                                 Container(
                                   height: 50.0,

@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:marketplace/model/Agreement.dart';
 
 import '../components/topbar.dart';
+import '../utils/styles/app_colors.dart';
 import 'data_controller.dart';
 
 class SignOff extends StatelessWidget {
@@ -79,23 +80,47 @@ class SignOff extends StatelessWidget {
                       ),
                       GestureDetector(
                         child: Card(
-                          margin: EdgeInsets.symmetric(
-                              vertical: 10, horizontal: 25),
-                          child: ListTile(
-                            title: Text(
-                              'Disagree',
-                              style: TextStyle(
-                                fontFamily: 'SourceSansPro',
-                                color: Color.fromARGB(255, 0, 0, 0),
-                                fontSize: 20,
+                            margin: EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 25),
+                            child: ListTile(
+                              title: Text(
+                                'Disagree',
+                                style: TextStyle(
+                                  fontFamily: 'SourceSansPro',
+                                  color: Color.fromARGB(255, 0, 0, 0),
+                                  fontSize: 20,
+                                ),
                               ),
-                            ),
-                          ),
-                        ),
-                        onTap: () {
-                          updateDisagree();
-                        },
+                              onTap: () => showDialog<String>(
+                                context: context,
+                                builder: (BuildContext context) => AlertDialog(
+                                  // title: const Text('AlertDialog Title'),
+                                  content: const Text(
+                                      'To confirm, click confirm button'),
+
+                                  actions: <Widget>[
+                                    Container(
+                                      height: 50.0,
+                                      width: 345,
+                                      child: ElevatedButton(
+                                        child: const Text('Confirm'),
+                                        style: ElevatedButton.styleFrom(
+                                            backgroundColor:
+                                                AppColors.blueDarkColor),
+                                        onPressed: () {
+                                          updateDisagree();
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )),
                       ),
+                      // onTap: () {
+                      //   updateDisagree();
+                      // },
+
                       // Card(
                       //   margin: EdgeInsets.symmetric(vertical: 2, horizontal: 25),
                       //   child: ListTile(

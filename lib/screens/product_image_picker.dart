@@ -1074,10 +1074,10 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
                           onPressed: () => showDialog<String>(
                             context: context,
                             builder: (BuildContext context) => AlertDialog(
-                              // title: const Text('AlertDialog Title'),
+                              title:
+                                  const Text('Confirmation for Adding Product'),
                               content: const Text(
-                                  'To confirm, click confirm button'),
-
+                                  'confirm to push the product to marketplace ?'),
                               actions: <Widget>[
                                 Container(
                                   height: 50.0,
@@ -1096,7 +1096,7 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
                               ],
                             ),
                           ),
-                          child: const Text('Confirm'),
+                          child: const Text('Submit'),
                           style: ElevatedButton.styleFrom(
                               foregroundColor: Colors.white,
                               backgroundColor: AppColors.blueDarkColor),
