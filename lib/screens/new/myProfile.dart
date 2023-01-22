@@ -6,6 +6,7 @@ import 'package:marketplace/app_routes/app_route.dart';
 import 'package:marketplace/screens/login_page.dart';
 
 import '../../components/topbar.dart';
+import '../main_screen.dart';
 
 class Profile extends StatefulWidget {
   static const routeName = "/profile";
@@ -128,13 +129,13 @@ class _ProfileState extends State<Profile> {
               height: 0.6,
               color: Colors.black87,
             ),
-            ListTile(
-              leading: Icon(Icons.badge),
-              title: GestureDetector(child: Text("View your Products")),
-              onTap: () {
-                GoRouter.of(context).goNamed(RouteCon.yourProducts);
-              },
-            ),
+            // ListTile(
+            //   leading: Icon(Icons.badge),
+            //   title: GestureDetector(child: Text("View your Products")),
+            //   onTap: () {
+            //     GoRouter.of(context).goNamed(RouteCon.yourProducts);
+            //   },
+            // ),
             Divider(height: 0.6, color: Colors.black87),
             ListTile(
               leading: Icon(Icons.shopping_bag),
@@ -146,7 +147,7 @@ class _ProfileState extends State<Profile> {
             Divider(height: 0.6, color: Colors.black87),
 
             ListTile(
-              leading: Icon(Icons.shopping_bag),
+              leading: Icon(Icons.topic),
               title: GestureDetector(child: Text("Signed Agreements")),
               onTap: () {
                 GoRouter.of(context).goNamed(RouteCon.signedagreements);
@@ -223,7 +224,15 @@ class _ProfileState extends State<Profile> {
 
   Widget logoutButton() {
     return InkWell(
-      onTap: () {},
+      onTap: () async {
+        print('inside logout function');
+
+        await FirebaseAuth.instance.signOut();
+        // await FacebookAuth.instance.logOut();
+        GoRouter.of(context).goNamed(RouteCon.login);
+
+        print('leaving logout function');
+      },
       child: Container(
           color: Colors.orange,
           child: Padding(

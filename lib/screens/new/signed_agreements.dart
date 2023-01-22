@@ -34,7 +34,7 @@ class _SignedAgreementdsState extends State<SignedAgreementds> {
           });
         } else {
           setState(() {
-            field = 'sellerId';
+            field = 'buyer_id';
             print("pppp $field");
           });
         }
@@ -283,7 +283,8 @@ class _SignedAgreementdsState extends State<SignedAgreementds> {
                                                 style: ElevatedButton.styleFrom(
                                                     backgroundColor:
                                                         AppColors.redColor),
-                                                child: const Text("Make PDF")),
+                                                child: const Text(
+                                                    "Got to the final signOFF Screen")),
                                           ),
                                         ],
                                       ),

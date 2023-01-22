@@ -447,7 +447,7 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
                             style: ralewayStyle.copyWith(
                               fontWeight: FontWeight.w400,
                               color: AppColors.blueDarkColor,
-                              fontSize: 12.0,
+                              fontSize: 16.0,
                             ),
                             decoration: InputDecoration(
                               border: InputBorder.none,
@@ -457,7 +457,7 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
                               hintStyle: ralewayStyle.copyWith(
                                 fontWeight: FontWeight.w400,
                                 color: AppColors.blueDarkColor.withOpacity(0.5),
-                                fontSize: 12.0,
+                                fontSize: 16.0,
                               ),
                             ),
                           ),
@@ -498,7 +498,7 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
                             style: ralewayStyle.copyWith(
                               fontWeight: FontWeight.w400,
                               color: AppColors.blueDarkColor,
-                              fontSize: 12.0,
+                              fontSize: 16.0,
                             ),
                             decoration: InputDecoration(
                               border: InputBorder.none,
@@ -512,7 +512,7 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
                               hintStyle: ralewayStyle.copyWith(
                                 fontWeight: FontWeight.w400,
                                 color: AppColors.blueDarkColor.withOpacity(0.5),
-                                fontSize: 12.0,
+                                fontSize: 14.0,
                               ),
                             ),
                           ),
@@ -558,7 +558,7 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
                             style: ralewayStyle.copyWith(
                               fontWeight: FontWeight.w400,
                               color: AppColors.blueDarkColor,
-                              fontSize: 12.0,
+                              fontSize: 16.0,
                             ),
                             decoration: InputDecoration(
                               border: InputBorder.none,
@@ -572,7 +572,7 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
                               hintStyle: ralewayStyle.copyWith(
                                 fontWeight: FontWeight.w400,
                                 color: AppColors.blueDarkColor.withOpacity(0.5),
-                                fontSize: 12.0,
+                                fontSize: 14.0,
                               ),
                             ),
                           ),
@@ -637,7 +637,7 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
                             style: ralewayStyle.copyWith(
                               fontWeight: FontWeight.w400,
                               color: AppColors.blueDarkColor,
-                              fontSize: 12.0,
+                              fontSize: 16.0,
                             ),
                             decoration: InputDecoration(
                               border: InputBorder.none,
@@ -651,7 +651,7 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
                               hintStyle: ralewayStyle.copyWith(
                                 fontWeight: FontWeight.w400,
                                 color: AppColors.blueDarkColor.withOpacity(0.5),
-                                fontSize: 12.0,
+                                fontSize: 14.0,
                               ),
                             ),
                           ),
@@ -695,7 +695,7 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
                             style: ralewayStyle.copyWith(
                               fontWeight: FontWeight.w400,
                               color: AppColors.blueDarkColor,
-                              fontSize: 12.0,
+                              fontSize: 16.0,
                             ),
                             decoration: InputDecoration(
                               border: InputBorder.none,
@@ -709,7 +709,7 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
                               hintStyle: ralewayStyle.copyWith(
                                 fontWeight: FontWeight.w400,
                                 color: AppColors.blueDarkColor.withOpacity(0.5),
-                                fontSize: 12.0,
+                                fontSize: 14.0,
                               ),
                             ),
                           ),
@@ -753,7 +753,7 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
                             style: ralewayStyle.copyWith(
                               fontWeight: FontWeight.w400,
                               color: AppColors.blueDarkColor,
-                              fontSize: 12.0,
+                              fontSize: 16.0,
                             ),
                             decoration: InputDecoration(
                               border: InputBorder.none,
@@ -767,7 +767,7 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
                               hintStyle: ralewayStyle.copyWith(
                                 fontWeight: FontWeight.w400,
                                 color: AppColors.blueDarkColor.withOpacity(0.5),
-                                fontSize: 12.0,
+                                fontSize: 14.0,
                               ),
                             ),
                           ),
@@ -877,7 +877,7 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
                             style: ralewayStyle.copyWith(
                               fontWeight: FontWeight.w400,
                               color: AppColors.blueDarkColor,
-                              fontSize: 12.0,
+                              fontSize: 16.0,
                             ),
                             decoration: InputDecoration(
                               border: InputBorder.none,
@@ -903,7 +903,7 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
                           'Institution No',
                           textAlign: TextAlign.start,
                           style: ralewayStyle.copyWith(
-                            fontSize: 12.0,
+                            fontSize: 14.0,
                             color: AppColors.blueDarkColor,
                             fontWeight: FontWeight.w700,
                           ),
@@ -932,7 +932,7 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
                             style: ralewayStyle.copyWith(
                               fontWeight: FontWeight.w400,
                               color: AppColors.blueDarkColor,
-                              fontSize: 12.0,
+                              fontSize: 16.0,
                             ),
                             decoration: InputDecoration(
                               border: InputBorder.none,
@@ -946,7 +946,7 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
                               hintStyle: ralewayStyle.copyWith(
                                 fontWeight: FontWeight.w400,
                                 color: AppColors.blueDarkColor.withOpacity(0.5),
-                                fontSize: 12.0,
+                                fontSize: 14.0,
                               ),
                             ),
                           ),
@@ -987,7 +987,7 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
                             style: ralewayStyle.copyWith(
                               fontWeight: FontWeight.w400,
                               color: AppColors.blueDarkColor,
-                              fontSize: 12.0,
+                              fontSize: 16.0,
                             ),
                             decoration: InputDecoration(
                               border: InputBorder.none,
@@ -1001,7 +1001,7 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
                               hintStyle: ralewayStyle.copyWith(
                                 fontWeight: FontWeight.w400,
                                 color: AppColors.blueDarkColor.withOpacity(0.5),
-                                fontSize: 12.0,
+                                fontSize: 14.0,
                               ),
                             ),
                           ),
@@ -1072,7 +1072,7 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
                                     });
                                   }),
                               Text(
-                                'I have read the agreement and I accept it',
+                                'I have read the terms and I accept it',
                                 style: TextStyle(fontSize: 16),
                               )
                             ],
@@ -1094,10 +1094,10 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
                                   context: context,
                                   builder: (BuildContext context) =>
                                       AlertDialog(
-                                    // title: const Text('AlertDialog Title'),
+                                    title: const Text(
+                                        'Confirmation for Adding Product'),
                                     content: const Text(
-                                        'To confirm click confirm button'),
-
+                                        'You wish to push the product to marketplace?'),
                                     actions: <Widget>[
                                       //
                                       Container(
@@ -1110,6 +1110,7 @@ class _ProductImagePickerState extends State<ProductImagePicker> {
                                                   AppColors.blueDarkColor),
                                           onPressed: () {
                                             saveItem();
+                                            GoRouter.of(context).pop();
                                           },
                                         ),
                                       ),

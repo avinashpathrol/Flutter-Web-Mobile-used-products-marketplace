@@ -161,8 +161,8 @@ class LoginForm extends StatelessWidget {
             obscureText: true,
             decoration: InputDecoration(
               border: InputBorder.none,
-              suffixIcon: IconButton(
-                  onPressed: () {}, icon: Image.asset(AppIcons.eyeIcon)),
+              // suffixIcon: IconButton(
+              //     onPressed: () {}, icon: Image.asset(AppIcons.eyeIcon)),
               prefixIcon: IconButton(
                   onPressed: () {}, icon: Image.asset(AppIcons.lockIcon)),
               contentPadding: const EdgeInsets.only(top: 16.0),

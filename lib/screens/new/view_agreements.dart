@@ -35,7 +35,7 @@ class _ViewAgreementdsState extends State<ViewAgreementds> {
   String signUrl = '';
 
   Future<UploadTask?> uploadFile1(
-      Uint8List? file, String docId, String buyerId) async {
+      Uint8List? file, String docId, String buyerId, String productName) async {
     // idGenerator();
     if (file == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -70,6 +70,10 @@ class _ViewAgreementdsState extends State<ViewAgreementds> {
     FirebaseFirestore.instance.collection('Agreement').doc(docId).update({
       'agreementStatus': true,
       'signature': signUrl,
+      "agreementTitle": [
+        "Agreement signed successfully for ${productName}",
+        "Agreement signed successfully for ${productName}"
+      ],
     }).then((value) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("Agreement accepted")));
@@ -80,19 +84,19 @@ class _ViewAgreementdsState extends State<ViewAgreementds> {
           .doc(buyerId)
           .get()
           .then((value) {
-        // print("pppp ${value['deviceToken']}");
-        sendPushMessageToWeb(
-            value['deviceToken'], 'new agreement recieved', 'detail ');
+        print("pppp ${value['deviceToken']}");
+        sendPushMessageToWeb(value['deviceToken'],
+            'Agreement signed successfully for ${productName}', 'detail ');
         // Navigator.pop(context);
         // GoRouter.of(context).goNamed(RouteCon.showagreement);
       });
-      GoRouter.of(context).goNamed(RouteCon.signedagreements);
+      // GoRouter.of(context).goNamed(RouteCon.signedagreements);
     });
 
     return Future.value(uploadTask);
   }
 
-  void updateAgreement(String docId, String buyerId) async {
+  void updateAgreement(String docId, String buyerId, String productname) async {
     setState(() {
       isLoading = true;
     });
@@ -106,7 +110,7 @@ class _ViewAgreementdsState extends State<ViewAgreementds> {
     setState(() {
       img = decode;
     });
-    uploadFile1(img, docId, buyerId);
+    uploadFile1(img, docId, buyerId, productname);
     setState(() {
       isLoading = false;
     });
@@ -115,8 +119,8 @@ class _ViewAgreementdsState extends State<ViewAgreementds> {
 
   String? field;
 
-  changeField() {
-    FirebaseFirestore.instance
+  changeField() async {
+    await FirebaseFirestore.instance
         .collection('Agreement')
         // .where('agreementStatus', isEqualTo: true)
         .get()
@@ -125,12 +129,12 @@ class _ViewAgreementdsState extends State<ViewAgreementds> {
         if (FirebaseAuth.instance.currentUser!.uid == e['buyer_id']) {
           setState(() {
             field = 'buyer_id';
-            print("pppp $field");
+            // print("pppp $field");
           });
-        } else {
+        } else if (FirebaseAuth.instance.currentUser!.uid == e['sellerId']) {
           setState(() {
             field = 'sellerId';
-            print("pppp $field");
+            // print("pppp $field");
           });
         }
       });
@@ -153,7 +157,7 @@ class _ViewAgreementdsState extends State<ViewAgreementds> {
         child: TopBar(),
       ),
       body: field == null
-          ? Center(child: CircularProgressIndicator())
+          ? Center(child: Text(''))
           : Column(
               children: [
                 Expanded(
@@ -339,7 +343,7 @@ class _ViewAgreementdsState extends State<ViewAgreementds> {
                                                                                         style: ElevatedButton.styleFrom(backgroundColor: AppColors.blueDarkColor),
                                                                                         onPressed: () async {
                                                                                           print("oooo ${data['buyer_id']}");
-                                                                                          updateAgreement(data.id, "${data['buyer_id']}");
+                                                                                          updateAgreement(data.id, "${data['buyer_id']}", "${data['name']}");
                                                                                         },
                                                                                       ),
                                                                                     ),

@@ -139,20 +139,23 @@ class _ProductOverviewState extends State<ProductOverview>
       'partial_pay': _itemPartialPayController.text,
       'productId': widget.product.productId,
       'agreementStatus': false,
+      "agreementTitle": [
+        "Agreement received from ${_itemNameController.text} for ${widget.product.name}",
+        '"Agreement requested for ${_itemNameController.text} for ${widget.product.name}",'
+      ],
     }).then((value) {
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('Agreement Uploaded')));
       // sendPushMessage();
       print(value.id);
-      FirebaseFirestore.instance
-          .collection('Agreement')
-          .doc(value.id)
-          .update({'docId': value.id});
+      FirebaseFirestore.instance.collection('Agreement').doc(value.id).update({
+        'docId': value.id,
+      });
       setState(() {
         isLoading = false;
       });
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Please wait from buyer side to accep agreement')));
+          content: Text('Please wait from buyer side to accept agreement')));
 
       FirebaseFirestore.instance
           .collection('users')
@@ -1180,10 +1183,9 @@ class _ProductOverviewState extends State<ProductOverview>
                                       context: context,
                                       builder: (BuildContext context) =>
                                           AlertDialog(
-                                        // title: const Text('AlertDialog Title'),
+                                        title: const Text('Confirm Agreement'),
                                         content: const Text(
-                                            'To confirm click confirm button'),
-
+                                            'You have signed the agreement?'),
                                         actions: <Widget>[
                                           //
                                           Container(
